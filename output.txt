@@ -1,102 +1,23 @@
-# Nmap 7.80 scan initiated Wed Oct 25 15:08:46 2023 as: nmap -T4 --reason -Pn -sV -p 80,443 "--script=banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -iL target.txt -oN output.txt -vv
+# Nmap 7.94 scan initiated Thu Oct 26 22:10:31 2023 as: nmap -T4 --reason -Pn -sV -p 443 "--script=banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -iL target.txt -oN output.txt -vv
 Nmap scan report for apisdx.sadix.com (117.54.4.59)
-Host is up, received user-set (0.0044s latency).
+Host is up, received user-set (0.0084s latency).
 rDNS record for 117.54.4.59: rev-59-4-54.117.indo.net.id
-Scanned at 2023-10-25 15:08:47 UTC for 84s
+Scanned at 2023-10-26 22:10:32 +07 for 81s
 
 PORT    STATE SERVICE  REASON          VERSION
-80/tcp  open  http     syn-ack ttl 124 Microsoft IIS httpd 10.0
-|_http-chrono: Request times for /; avg: 163.37ms; min: 158.66ms; max: 176.97ms
-| http-comments-displayer: 
-| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=apisdx.sadix.com
-|     
-|     Path: http://apisdx.sadix.com:80/
-|     Line number: 8
-|     Comment: 
-|_        
-|_http-csrf: Couldn't find any CSRF vulnerabilities.
-|_http-date: Wed, 25 Oct 2023 15:09:06 GMT; 0s from local time.
-|_http-devframework: ASP.NET detected. Found related header.
-|_http-dombased-xss: Couldn't find any DOM based XSS.
-|_http-drupal-enum: Nothing found amongst the top 100 resources,use --script-args number=<number|all> for deeper analysis)
+443/tcp open  ssl/http syn-ack ttl 120 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-config-backup: ERROR: Script execution failed (use -d to debug)
 |_http-errors: Couldn't find any error pages.
 |_http-feed: Couldn't find any feeds.
-|_http-fetch: Please enter the complete path of the directory to save data in.
-| http-headers: 
-|   Content-Length: 1160
-|   Content-Type: text/html
-|   Last-Modified: Wed, 25 Sep 2019 05:28:53 GMT
-|   Accept-Ranges: bytes
-|   ETag: "3435a31e6273d51:0"
-|   Server: Microsoft-IIS/10.0
-|   X-Powered-By: ASP.NET
-|   Date: Wed, 25 Oct 2023 15:09:05 GMT
-|   Connection: close
-|   
-|_  (Request type: HEAD)
-|_http-jsonp-detection: Couldn't find any JSONP endpoints.
-|_http-litespeed-sourcecode-download: Request with null byte did not work. This web server might not be vulnerable
-|_http-malware-host: Host appears to be clean
+|_ssl-date: 2023-10-26T15:11:47+00:00; +1s from scanner time.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| http-php-version: Logo query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
+|_Credits query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
 | http-methods: 
 |   Supported Methods: OPTIONS TRACE GET HEAD POST
 |_  Potentially risky methods: TRACE
+|_http-malware-host: Host appears to be clean
 |_http-mobileversion-checker: No mobile version detected.
-| http-php-version: Logo query returned unknown hash 774e8ba83458d8d243ad6b649f43d5a0
-|_Credits query returned unknown hash 774e8ba83458d8d243ad6b649f43d5a0
-|_http-referer-checker: Couldn't find any cross-domain scripts.
-|_http-security-headers: 
-|_http-server-header: Microsoft-IIS/10.0
-| http-sitemap-generator: 
-|   Directory structure:
-|     /
-|       Other: 1
-|   Longest directory structure:
-|     Depth: 0
-|     Dir: /
-|   Total files found (by extension):
-|_    Other: 1
-|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
-|_http-title: Site doesn't have a title (text/html).
-| http-useragent-tester: 
-|   Status for browser useragent: 200
-|   Allowed User Agents: 
-|     Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)
-|     libwww
-|     lwp-trivial
-|     libcurl-agent/1.0
-|     PHP/
-|     Python-urllib/2.5
-|     GT::WWW
-|     Snoopy
-|     MFC_Tear_Sample
-|     HTTP::Lite
-|     PHPCrawl
-|     URI::Fetch
-|     Zend_Http_Client
-|     http client
-|     PECL::HTTP
-|     Wget/1.13.4 (linux-gnu)
-|_    WWW-Mechanize/1.34
-| http-vhosts: 
-|_127 names had status 200
-|_http-wordpress-enum: Nothing found amongst the top 100 resources,use --script-args search-limit=<number|all> for deeper analysis)
-|_http-wordpress-users: [Error] Wordpress installation was not found. We couldn't find wp-login.php
-443/tcp open  ssl/http syn-ack ttl 124 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
-|_http-chrono: Request times for /; avg: 160.97ms; min: 157.45ms; max: 170.75ms
-| http-comments-displayer: 
-| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=apisdx.sadix.com
-|     
-|     Path: https://apisdx.sadix.com:443/
-|     Line number: 8
-|     Comment: 
-|_        
-|_http-csrf: Couldn't find any CSRF vulnerabilities.
-|_http-date: Wed, 25 Oct 2023 15:09:04 GMT; -2s from local time.
-|_http-devframework: ASP.NET detected. Found related header.
-|_http-dombased-xss: Couldn't find any DOM based XSS.
-|_http-errors: Couldn't find any error pages.
-|_http-feed: Couldn't find any feeds.
-|_http-fetch: Please enter the complete path of the directory to save data in.
 | http-headers: 
 |   Content-Length: 1072
 |   Content-Type: text/html
@@ -105,26 +26,11 @@ PORT    STATE SERVICE  REASON          VERSION
 |   ETag: "b98a3ad21611d51:0"
 |   Server: Microsoft-IIS/10.0
 |   X-Powered-By: ASP.NET
-|   Date: Wed, 25 Oct 2023 15:09:03 GMT
+|   Date: Thu, 26 Oct 2023 15:10:49 GMT
 |   Connection: close
 |   
 |_  (Request type: HEAD)
-|_http-jsonp-detection: Couldn't find any JSONP endpoints.
-|_http-litespeed-sourcecode-download: Request with null byte did not work. This web server might not be vulnerable
-|_http-malware-host: Host appears to be clean
-| http-methods: 
-|   Supported Methods: OPTIONS TRACE GET HEAD POST
-|_  Potentially risky methods: TRACE
-|_http-mobileversion-checker: No mobile version detected.
-| http-php-version: Logo query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
-|_Credits query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
-|_http-referer-checker: Couldn't find any cross-domain scripts.
-| http-security-headers: 
-|   Strict_Transport_Security: 
-|_    HSTS not configured in HTTPS Server
-| http-server-header: 
-|   Microsoft-HTTPAPI/2.0
-|_  Microsoft-IIS/10.0
+|_http-title: Site doesn't have a title (text/html).
 | http-sitemap-generator: 
 |   Directory structure:
 |     /
@@ -134,80 +40,15 @@ PORT    STATE SERVICE  REASON          VERSION
 |     Dir: /
 |   Total files found (by extension):
 |_    Other: 1
-|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
-|_http-title: Site doesn't have a title (text/html).
-| http-useragent-tester: 
-|   Status for browser useragent: 200
-|   Allowed User Agents: 
-|     Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)
-|     libwww
-|     lwp-trivial
-|     libcurl-agent/1.0
-|     PHP/
-|     Python-urllib/2.5
-|     GT::WWW
-|     Snoopy
-|     MFC_Tear_Sample
-|     HTTP::Lite
-|     PHPCrawl
-|     URI::Fetch
-|     Zend_Http_Client
-|     http client
-|     PECL::HTTP
-|     Wget/1.13.4 (linux-gnu)
-|_    WWW-Mechanize/1.34
+|_http-date: Thu, 26 Oct 2023 15:10:52 GMT; -1s from local time.
 | http-vhosts: 
-|_127 names had status 404
-|_http-wordpress-enum: Nothing found amongst the top 100 resources,use --script-args search-limit=<number|all> for deeper analysis)
-|_http-wordpress-users: [Error] Wordpress installation was not found. We couldn't find wp-login.php
-| ssl-cert: Subject: commonName=*.sadix.com
-| Subject Alternative Name: DNS:*.sadix.com, DNS:sadix.com
-| Issuer: commonName=Go Daddy Secure Certificate Authority - G2/organizationName=GoDaddy.com, Inc./stateOrProvinceName=Arizona/countryName=US/localityName=Scottsdale/organizationalUnitName=http://certs.godaddy.com/repository/
-| Public Key type: rsa
-| Public Key bits: 2048
-| Signature Algorithm: sha256WithRSAEncryption
-| Not valid before: 2023-02-15T07:01:07
-| Not valid after:  2024-03-18T07:01:07
-| MD5:   0a3d 2b6e 829f 84b3 30a8 fd28 4151 ecae
-| SHA-1: 6b9c ddde c038 2ed2 1d14 eb0b a875 d154 2a6e 09ad
-| -----BEGIN CERTIFICATE-----
-| MIIGhzCCBW+gAwIBAgIIMyyEdj+BB98wDQYJKoZIhvcNAQELBQAwgbQxCzAJBgNV
-| BAYTAlVTMRAwDgYDVQQIEwdBcml6b25hMRMwEQYDVQQHEwpTY290dHNkYWxlMRow
-| GAYDVQQKExFHb0RhZGR5LmNvbSwgSW5jLjEtMCsGA1UECxMkaHR0cDovL2NlcnRz
-| LmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvMTMwMQYDVQQDEypHbyBEYWRkeSBTZWN1
-| cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IC0gRzIwHhcNMjMwMjE1MDcwMTA3WhcN
-| MjQwMzE4MDcwMTA3WjAWMRQwEgYDVQQDDAsqLnNhZGl4LmNvbTCCASIwDQYJKoZI
-| hvcNAQEBBQADggEPADCCAQoCggEBALrDD+mYXGAe36GvsWAXz1F5yIW8d8u6PV8a
-| EBw3py753fod9cSjYuvjjWJPgXLKZ5lXSUYH9biTXXo0DHjVG9EyRNKb/5GSduv8
-| qdQ+4GA4JcN09jIcGi0XnIDUldFbJjAxsPb822rHXP6Tlj4l7AIHHVhaWMpjw+Ty
-| judrBoi7kUAeZUjkUiTDTcgsIqvr1WdJK3zxrKw1TCA8yEMUl2UjoTW2yoAPTnzo
-| UZWohjxFb3D5XIchS5td12J+uWTUJJ7iYWhvo4aAK39pr6H8oAD9937WzXIcYA/N
-| 0dngtjzL5Mt9ZhZZg8usXxSkBmjMNgAT4+OFKYjF81gnCyr3AxcCAwEAAaOCAzgw
-| ggM0MAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
-| MA4GA1UdDwEB/wQEAwIFoDA4BgNVHR8EMTAvMC2gK6AphidodHRwOi8vY3JsLmdv
-| ZGFkZHkuY29tL2dkaWcyczEtNTIwNC5jcmwwXQYDVR0gBFYwVDBIBgtghkgBhv1t
-| AQcXATA5MDcGCCsGAQUFBwIBFitodHRwOi8vY2VydGlmaWNhdGVzLmdvZGFkZHku
-| Y29tL3JlcG9zaXRvcnkvMAgGBmeBDAECATB2BggrBgEFBQcBAQRqMGgwJAYIKwYB
-| BQUHMAGGGGh0dHA6Ly9vY3NwLmdvZGFkZHkuY29tLzBABggrBgEFBQcwAoY0aHR0
-| cDovL2NlcnRpZmljYXRlcy5nb2RhZGR5LmNvbS9yZXBvc2l0b3J5L2dkaWcyLmNy
-| dDAfBgNVHSMEGDAWgBRAwr0njsw0gzCiM9f7bLPwtCyAzjAhBgNVHREEGjAYggsq
-| LnNhZGl4LmNvbYIJc2FkaXguY29tMB0GA1UdDgQWBBT7fO22vV8Y08/1rNjnFKGD
-| Yah5ADCCAX8GCisGAQQB1nkCBAIEggFvBIIBawFpAHUA7s3QZNXbGs7FXLedtM0T
-| ojKHRny87N7DUUhZRnEftZsAAAGGU+CFhQAABAMARjBEAiBRKlxtevCeroNK3Rb/
-| Zp0RGnnokCLPiF55FgBoIQWYUgIgGaCBxARhwydbCE8FdyGmZYqZ2bYWRCHV537b
-| cHOwjJoAdwBIsONr2qZHNA/lagL6nTDrHFIBy1bdLIHZu7+rOdiEcwAAAYZT4IaN
-| AAAEAwBIMEYCIQC8O9V6Y9IZLyJwFKCcUos+40KV7UR4Cyk3hX/gRGHNAAIhAMYV
-| m/SB+U6fywQaa+o3ii/9xava+ymd/zNJtQWKZXP2AHcA2ra/az+1tiKfm8K7XGvo
-| cJFxbLtRhIU0vaQ9MEjX+6sAAAGGU+CG9AAABAMASDBGAiEA471wb8lCx7iGFU5f
-| ple9LAVA7MwPMo/v5PYlYZKprGoCIQCRobkLQYSWBHPE5aPTTZ3BEd3SiAbsi4L2
-| 2KbsCSekbjANBgkqhkiG9w0BAQsFAAOCAQEAERvLkPHYhJQURGNs57dO6kmkgCvz
-| NSVDwU9VAQoTeXbSmR2+jfdaqInZ4Ftwd68r86CfI6yXkiAbVfBsc75T109ZopLI
-| klyBKkFt3h2eHnN7PQ5mlVYtg4v/x5A+fl5QHFBU0qgfFdnKuRjtjjwnvbfj7Uzr
-| ZhthQ5C6PeAnQQ5BDLwZpt0lyDZrqjZVLxfk864n30rWj1esPK1HYuGw6PexNBaV
-| jkCB8wc4GwJEADCiuGYXkiKdy+MTzqqgNTXRBU/BSOeKd4onxnNkoicuVicxAYib
-| NlyA/NuCV+IxeLCZ5gUmrb7ACjqshK1ttHIviIqAQH4M12yqmFBJrPqzwg==
-|_-----END CERTIFICATE-----
-|_ssl-date: 2023-10-25T15:10:10+00:00; 0s from scanner time.
+| test.sadix.com
+| dns.sadix.com
+|_126 names had status 404
+|_http-fetch: Please enter the complete path of the directory to save data in.
+|_http-referer-checker: Couldn't find any cross-domain scripts.
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-jsonp-detection: Couldn't find any JSONP endpoints.
 | ssl-enum-ciphers: 
 |   TLSv1.0: 
 |     ciphers: 
@@ -274,9 +115,95 @@ PORT    STATE SERVICE  REASON          VERSION
 |       Broken cipher RC4 is deprecated by RFC 7465
 |       Ciphersuite uses MD5 for message integrity
 |_  least strength: C
-|_sslv2-drown: 
+|_http-devframework: ASP.NET detected. Found related header.
+|_http-wordpress-users: [Error] Wordpress installation was not found. We couldn't find wp-login.php
+|_http-chrono: Request times for /; avg: 359.68ms; min: 152.42ms; max: 1175.67ms
+| http-comments-displayer: 
+| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=apisdx.sadix.com
+|     
+|     Path: https://apisdx.sadix.com:443/
+|     Line number: 8
+|     Comment: 
+|_        
+| http-useragent-tester: 
+|   Status for browser useragent: 200
+|   Allowed User Agents: 
+|     Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)
+|     libwww
+|     lwp-trivial
+|     libcurl-agent/1.0
+|     PHP/
+|     Python-urllib/2.5
+|     GT::WWW
+|     Snoopy
+|     MFC_Tear_Sample
+|     HTTP::Lite
+|     PHPCrawl
+|     URI::Fetch
+|     Zend_Http_Client
+|     http client
+|     PECL::HTTP
+|     Wget/1.13.4 (linux-gnu)
+|_    WWW-Mechanize/1.34
+| http-security-headers: 
+|   Strict_Transport_Security: 
+|_    HSTS not configured in HTTPS Server
+| ssl-cert: Subject: commonName=*.sadix.com
+| Subject Alternative Name: DNS:*.sadix.com, DNS:sadix.com
+| Issuer: commonName=Go Daddy Secure Certificate Authority - G2/organizationName=GoDaddy.com, Inc./stateOrProvinceName=Arizona/countryName=US/organizationalUnitName=http://certs.godaddy.com/repository//localityName=Scottsdale
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2023-02-15T07:01:07
+| Not valid after:  2024-03-18T07:01:07
+| MD5:   0a3d:2b6e:829f:84b3:30a8:fd28:4151:ecae
+| SHA-1: 6b9c:ddde:c038:2ed2:1d14:eb0b:a875:d154:2a6e:09ad
+| -----BEGIN CERTIFICATE-----
+| MIIGhzCCBW+gAwIBAgIIMyyEdj+BB98wDQYJKoZIhvcNAQELBQAwgbQxCzAJBgNV
+| BAYTAlVTMRAwDgYDVQQIEwdBcml6b25hMRMwEQYDVQQHEwpTY290dHNkYWxlMRow
+| GAYDVQQKExFHb0RhZGR5LmNvbSwgSW5jLjEtMCsGA1UECxMkaHR0cDovL2NlcnRz
+| LmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvMTMwMQYDVQQDEypHbyBEYWRkeSBTZWN1
+| cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IC0gRzIwHhcNMjMwMjE1MDcwMTA3WhcN
+| MjQwMzE4MDcwMTA3WjAWMRQwEgYDVQQDDAsqLnNhZGl4LmNvbTCCASIwDQYJKoZI
+| hvcNAQEBBQADggEPADCCAQoCggEBALrDD+mYXGAe36GvsWAXz1F5yIW8d8u6PV8a
+| EBw3py753fod9cSjYuvjjWJPgXLKZ5lXSUYH9biTXXo0DHjVG9EyRNKb/5GSduv8
+| qdQ+4GA4JcN09jIcGi0XnIDUldFbJjAxsPb822rHXP6Tlj4l7AIHHVhaWMpjw+Ty
+| judrBoi7kUAeZUjkUiTDTcgsIqvr1WdJK3zxrKw1TCA8yEMUl2UjoTW2yoAPTnzo
+| UZWohjxFb3D5XIchS5td12J+uWTUJJ7iYWhvo4aAK39pr6H8oAD9937WzXIcYA/N
+| 0dngtjzL5Mt9ZhZZg8usXxSkBmjMNgAT4+OFKYjF81gnCyr3AxcCAwEAAaOCAzgw
+| ggM0MAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC
+| MA4GA1UdDwEB/wQEAwIFoDA4BgNVHR8EMTAvMC2gK6AphidodHRwOi8vY3JsLmdv
+| ZGFkZHkuY29tL2dkaWcyczEtNTIwNC5jcmwwXQYDVR0gBFYwVDBIBgtghkgBhv1t
+| AQcXATA5MDcGCCsGAQUFBwIBFitodHRwOi8vY2VydGlmaWNhdGVzLmdvZGFkZHku
+| Y29tL3JlcG9zaXRvcnkvMAgGBmeBDAECATB2BggrBgEFBQcBAQRqMGgwJAYIKwYB
+| BQUHMAGGGGh0dHA6Ly9vY3NwLmdvZGFkZHkuY29tLzBABggrBgEFBQcwAoY0aHR0
+| cDovL2NlcnRpZmljYXRlcy5nb2RhZGR5LmNvbS9yZXBvc2l0b3J5L2dkaWcyLmNy
+| dDAfBgNVHSMEGDAWgBRAwr0njsw0gzCiM9f7bLPwtCyAzjAhBgNVHREEGjAYggsq
+| LnNhZGl4LmNvbYIJc2FkaXguY29tMB0GA1UdDgQWBBT7fO22vV8Y08/1rNjnFKGD
+| Yah5ADCCAX8GCisGAQQB1nkCBAIEggFvBIIBawFpAHUA7s3QZNXbGs7FXLedtM0T
+| ojKHRny87N7DUUhZRnEftZsAAAGGU+CFhQAABAMARjBEAiBRKlxtevCeroNK3Rb/
+| Zp0RGnnokCLPiF55FgBoIQWYUgIgGaCBxARhwydbCE8FdyGmZYqZ2bYWRCHV537b
+| cHOwjJoAdwBIsONr2qZHNA/lagL6nTDrHFIBy1bdLIHZu7+rOdiEcwAAAYZT4IaN
+| AAAEAwBIMEYCIQC8O9V6Y9IZLyJwFKCcUos+40KV7UR4Cyk3hX/gRGHNAAIhAMYV
+| m/SB+U6fywQaa+o3ii/9xava+ymd/zNJtQWKZXP2AHcA2ra/az+1tiKfm8K7XGvo
+| cJFxbLtRhIU0vaQ9MEjX+6sAAAGGU+CG9AAABAMASDBGAiEA471wb8lCx7iGFU5f
+| ple9LAVA7MwPMo/v5PYlYZKprGoCIQCRobkLQYSWBHPE5aPTTZ3BEd3SiAbsi4L2
+| 2KbsCSekbjANBgkqhkiG9w0BAQsFAAOCAQEAERvLkPHYhJQURGNs57dO6kmkgCvz
+| NSVDwU9VAQoTeXbSmR2+jfdaqInZ4Ftwd68r86CfI6yXkiAbVfBsc75T109ZopLI
+| klyBKkFt3h2eHnN7PQ5mlVYtg4v/x5A+fl5QHFBU0qgfFdnKuRjtjjwnvbfj7Uzr
+| ZhthQ5C6PeAnQQ5BDLwZpt0lyDZrqjZVLxfk864n30rWj1esPK1HYuGw6PexNBaV
+| jkCB8wc4GwJEADCiuGYXkiKdy+MTzqqgNTXRBU/BSOeKd4onxnNkoicuVicxAYib
+| NlyA/NuCV+IxeLCZ5gUmrb7ACjqshK1ttHIviIqAQH4M12yqmFBJrPqzwg==
+|_-----END CERTIFICATE-----
+|_http-vuln-cve2014-3704: ERROR: Script execution failed (use -d to debug)
+|_http-wordpress-enum: Nothing found amongst the top 100 resources,use --script-args search-limit=<number|all> for deeper analysis)
+| http-server-header: 
+|   Microsoft-HTTPAPI/2.0
+|_  Microsoft-IIS/10.0
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+|_http-litespeed-sourcecode-download: Request with null byte did not work. This web server might not be vulnerable
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
 Read data files from: /usr/bin/../share/nmap
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Wed Oct 25 15:10:11 2023 -- 1 IP address (1 host up) scanned in 85.25 seconds
+# Nmap done at Thu Oct 26 22:11:53 2023 -- 1 IP address (1 host up) scanned in 82.23 seconds

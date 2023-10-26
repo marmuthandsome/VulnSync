@@ -25,14 +25,12 @@ OVERWRITE = '\e[1A\e[K'
 
 # Function to validate input file
 
-
 def validate_input_file(input_file):
     if not os.path.isfile(input_file):
         print(f"{RED}Error: The input file '{input_file}' does not exist.{RESTORE}")
         sys.exit(1)
 
 # Main function
-
 
 def main():
     def parser():
@@ -207,7 +205,7 @@ Example:
     elif ldap:
         command = f"sudo nmap -sV -Pn --script \"ldap* and not brute\" --script ldap-search -p 389,636,3268,3269 -iL {input_file} -oN {output_file} -vv"
     elif web:
-        command = f"sudo nmap -T4 --reason -Pn -sV -p 80,443 --script='banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -T4 --reason -Pn -sV -p 443 --script='banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' -iL {input_file} -oN {output_file} -vv"
     elif port is not None:
         command = f"sudo nmap -sC -sV -sS -p{port} -iL {input_file} -oN {output_file} -vv"
     elif port_specific is not None:
@@ -245,12 +243,75 @@ Example:
     hosts = f"grep -T --color filtered output.txt"
     os.system(hosts)
     print("")
-    print(f"{RED}Vulnerabilies: {RESTORE}")
-    hosts = f"grep -T --color HSTS output.txt"
+    print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+
+    # Port 80 / 443
+    hosts = f"grep -T --color 80/tcp output.txt"
     os.system(hosts)
-    hosts = f"grep -T --color TRACE output.txt"
+    hosts = f"grep 443/tcp output.txt"
     os.system(hosts)
-    hosts = f"grep -T --color SWEET32 output.txt"
+    print("")
+    print(f"Severity {LGREEN}[Informational]{RESTORE}")
+    print("")
+    print(f"{RED}Vulnerabilies Name: {RESTORE}")
+    hosts = f"grep -oh 'HSTS not configured in HTTPS Server' output.txt"
+    os.system(hosts)
+    print("")
+    print(f"{RED}Impact: {RESTORE}")
+    print(f"| {CYAN}Improved Security{RESTORE}: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks.")
+    print(f"| {CYAN}Data Integrity{RESTORE}: HSTS helps protect the integrity of data transmitted between the user's browser and your server, reducing the risk of data tampering.")
+    print(f"{LPURPLE}Recommendation: {RESTORE}")
+    print(f"| Configure your web server to send the HSTS header in the HTTP response.")
+    print(f"| {CYAN}Strict-Transport-Security: max-age=31536000; includeSubDomains{RESTORE}")
+    print("")
+    print("+====================================+")
+    print("")
+    print(f"{RED}Vulnerabilies Name: {RESTORE}")
+    hosts = f"grep -oh 'Potentially risky methods: TRACE' output.txt"
+    os.system(hosts)
+    print("")
+    print(f"{RED}Impact: {RESTORE}")
+    print(f"| {CYAN}Improved Security{RESTORE}: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities.")
+    print(f"{LPURPLE}Recommendation: {RESTORE}")
+    print(f"| {CYAN}Disable TRACE Method{RESTORE}: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration.")
+    print("")
+    print("+====================================+")
+    print("")
+    print(f"{RED}Vulnerabilies Name: {RESTORE}")
+    hosts = f"grep -oh '64-bit block cipher 3DES vulnerable to SWEET32 attack' output.txt"
+    os.system(hosts)
+    print("")
+    print(f"{RED}Impact: {RESTORE}")
+    print(f"| {CYAN}Security Improvement{RESTORE}: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes.")
+    print(f"{LPURPLE}Recommendation: {RESTORE}")
+    print(f"| {CYAN}Replace 3DES{RESTORE}: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks.")
+    print("")
+    print("+====================================+")
+    print("")
+    print(f"{RED}Vulnerabilies Name: {RESTORE}")
+    hosts = f"grep -oh 'Broken cipher RC4 is deprecated by RFC 7465' output.txt"
+    os.system(hosts)
+    print("")
+    print(f"{RED}Impact: {RESTORE}")
+    print(f"| {CYAN}Security Enhancement{RESTORE}: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks.")
+    print(f"{LPURPLE}Recommendation: {RESTORE}")
+    print(f"| {CYAN}Disable RC4{RESTORE}: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides.")
+    print("")
+    print("+====================================+")
+    print("")
+    print(f"{RED}Vulnerabilies Name: {RESTORE}")
+    hosts = f"grep -oh 'TLSv1.0\|TLSv1.1' output.txt"
+    os.system(hosts)
+    print("")
+    print(f"{RED}Impact: {RESTORE}")
+    print(f"| {CYAN}Security Risk{RESTORE}: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system.")
+    print(f"{LPURPLE}Recommendation: {RESTORE}")
+    print(f"| {CYAN}Upgrade to TLSv1.2 or TLSv1.3{RESTORE}: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.")
+    print(f"| {CYAN}Disable TLSv1.0 and TLSv1.1{RESTORE}: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake.")
+    print("")
+    print("+====================================+")
+    print("")
+    hosts = f""
     os.system(hosts)
     print("")
 
