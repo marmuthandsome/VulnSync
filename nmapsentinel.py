@@ -25,12 +25,14 @@ OVERWRITE = '\e[1A\e[K'
 
 # Function to validate input file
 
+
 def validate_input_file(input_file):
     if not os.path.isfile(input_file):
         print(f"{RED}Error: The input file '{input_file}' does not exist.{RESTORE}")
         sys.exit(1)
 
 # Main function
+
 
 def main():
     def parser():
@@ -46,12 +48,9 @@ Usage: {script_name} [options] input_file
 
 Options:
     {LBLUE}-h, --help{RESTORE}              Show this help message and exit
-    {LBLUE}-p, --port PORT{RESTORE}         Specify a specific port to scan
     {LBLUE}--fast-scan{RESTORE}             Perform a fast scan
     {LBLUE}--full-scan{RESTORE}             Perform a full scan
-    {LBLUE}--full-scan-slower{RESTORE}      Perform a slower full scan (Recommended)
     {LBLUE}--full-vuln{RESTORE}             Perform a full scan with vuln (Recommended)
-    {LBLUE}--full-vuln-extras{RESTORE}      Perform a full scan with extras vuln (Long Time)
     {LBLUE}--ftp{RESTORE}                   Perform a scanning port 21
     {LBLUE}--ssh{RESTORE}                   Perform a scanning port 22
     {LBLUE}--telnet{RESTORE}                Perform a scanning port 23
@@ -66,7 +65,6 @@ Options:
     {LBLUE}--rdp{RESTORE}                   Perform a scanning port 3389
     {LBLUE}--cassandra{RESTORE}             Perform a scanning port 9042, 9160
     {LBLUE}--cipher{RESTORE}                Perform a scanning cipher vuln
-    {LBLUE}--port-specific PORT{RESTORE}    Specify a specific port to scan (e.g., 21, 22, 23, etc.)
     {LBLUE}-o, --output OUTPUT{RESTORE}     Specify the custom output file name
 
 Example:
@@ -78,13 +76,9 @@ Example:
 
     input_file = None
     output_file = "output.txt"  # Default output file name
-    port = None
     fast_scan = False
     full_scan = False
-    full_scan_slower = False
     full_vuln = False
-    full_vuln_extras = False
-    port_specific = None
     ssh = False
     ftp = False
     telnet = False
@@ -107,8 +101,6 @@ Example:
         if arg in ["-h", "--help"]:
             parser()
             sys.exit(0)
-        elif arg in ["-p", "--port"]:
-            port = args.pop(0)
         elif arg in ["-o", "--output"]:
             output_file = args.pop(0)
         elif arg == "--cipher":
@@ -119,12 +111,8 @@ Example:
             fast_scan = True
         elif arg == "--full-scan":
             full_scan = True
-        elif arg == "--full-scan-slower":
-            full_scan_slower = True
         elif arg == "--full-vuln":
             full_vuln = True
-        elif arg == "--full-vuln-extras":
-            full_vuln_extras = True
         elif arg == "--ftp":
             ftp = True
         elif arg == "--ssh":
@@ -151,8 +139,6 @@ Example:
             cassandra = True
         elif arg == "--ldap":
             ldap = True
-        elif arg == "--port-specific":
-            port_specific = args.pop(0)
         else:
             input_file = arg
 
@@ -170,11 +156,7 @@ Example:
         command = f"sudo nmap -sV -sC -O -T4 -n -Pn -oA fastscan -iL {input_file} -oN {output_file} -vv"
     elif full_scan:
         command = f"sudo nmap -sV -sC -O -T4 -n -Pn -p- -oA fullfastscan -iL {input_file} -oN {output_file} -vv"
-    elif full_scan_slower:
-        command = f"sudo nmap -sV -sC -O -p- -n -Pn -oA fullscan -iL {input_file} -oN {output_file} -vv"
     elif full_vuln:
-        command = f"sudo nmap -sV -T4 -Pn --script=vulners --script=vuln -iL {input_file} -oN {output_file} -vv"
-    elif full_vuln_extras:
         command = f"sudo nmap -sV -sC -O -p- -n -Pn -oA fullscan --script=vuln --script=vulners -iL {input_file} -oN {output_file} -vv"
     elif ftp:
         command = f"sudo nmap -sV -p21 -sC -A -Pn --script ftp-* -iL {input_file} -oN {output_file} -vv"
@@ -206,16 +188,14 @@ Example:
         command = f"sudo nmap -sV -Pn --script \"ldap* and not brute\" --script ldap-search -p 389,636,3268,3269 -iL {input_file} -oN {output_file} -vv"
     elif web:
         command = f"sudo nmap -T4 --reason -Pn -sV -p 443 --script='banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' -iL {input_file} -oN {output_file} -vv"
-    elif port is not None:
-        command = f"sudo nmap -sC -sV -sS -p{port} -iL {input_file} -oN {output_file} -vv"
-    elif port_specific is not None:
-        command = f"sudo nmap -sC -sV -sS -p{port_specific} -iL {input_file} -oN {output_file} -vv"
     else:
         print(f"{RED}Error: Please specify a valid scan option.{RESTORE}")
         parser()
         sys.exit(1)
 
     # Execute the Nmap command
+    hosts = f"clear"
+    os.system(hosts)
     print(f"{LCYAN}")
     print("█▀▀▄ █▀▄▀█ █▀▀█ █▀▀█ ▒█▀▀▀█ █▀▀ █▀▀▄ ▀▀█▀▀ ░▀░ █▀▀▄ █▀▀ █░")
     print("█░░█ █░▀░█ █▄▄█ █░░█ ░▀▀▀▄▄ █▀▀ █░░█ ░░█░░ ▀█▀ █░░█ █▀▀ █░░")
@@ -228,92 +208,279 @@ Example:
     print(f"{GREEN}Starting!!!{RESTORE}")
     try:
         with open(os.devnull, 'w') as nullfile:
-            subprocess.check_call(command, shell=True, stdout=nullfile, stderr=nullfile)
+            subprocess.check_call(command, shell=True,
+                                  stdout=nullfile, stderr=nullfile)
             print(f"{GREEN}Scan completed successfully!{RESTORE}")
     except subprocess.CalledProcessError:
-            print(f"{RED}Error occurred while running the Nmap scan.{RESTORE}")
-    
-    # Output
-    print("")
-    print(f"{CYAN}Open Port: {RESTORE}")
-    hosts = f"grep -T --color open output.txt"
-    os.system(hosts)
-    print("")
-    print(f"{CYAN}Close Port: {RESTORE}")
-    hosts = f"grep -T --color filtered output.txt"
-    os.system(hosts)
-    print("")
-    print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        print(f"{RED}Error occurred while running the Nmap scan.{RESTORE}")
 
-    # Port 80 / 443
-    hosts = f"grep -T --color 80/tcp output.txt"
-    os.system(hosts)
-    hosts = f"grep 443/tcp output.txt"
-    os.system(hosts)
-    print("")
-    print(f"Severity {LGREEN}[Informational]{RESTORE}")
-    print("")
-    print(f"{RED}Vulnerabilies Name: {RESTORE}")
-    hosts = f"grep -oh 'HSTS not configured in HTTPS Server' output.txt"
-    os.system(hosts)
-    print("")
-    print(f"{RED}Impact: {RESTORE}")
-    print(f"| {CYAN}Improved Security{RESTORE}: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks.")
-    print(f"| {CYAN}Data Integrity{RESTORE}: HSTS helps protect the integrity of data transmitted between the user's browser and your server, reducing the risk of data tampering.")
-    print(f"{LPURPLE}Recommendation: {RESTORE}")
-    print(f"| Configure your web server to send the HSTS header in the HTTP response.")
-    print(f"| {CYAN}Strict-Transport-Security: max-age=31536000; includeSubDomains{RESTORE}")
-    print("")
-    print("+====================================+")
-    print("")
-    print(f"{RED}Vulnerabilies Name: {RESTORE}")
-    hosts = f"grep -oh 'Potentially risky methods: TRACE' output.txt"
-    os.system(hosts)
-    print("")
-    print(f"{RED}Impact: {RESTORE}")
-    print(f"| {CYAN}Improved Security{RESTORE}: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities.")
-    print(f"{LPURPLE}Recommendation: {RESTORE}")
-    print(f"| {CYAN}Disable TRACE Method{RESTORE}: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration.")
-    print("")
-    print("+====================================+")
-    print("")
-    print(f"{RED}Vulnerabilies Name: {RESTORE}")
-    hosts = f"grep -oh '64-bit block cipher 3DES vulnerable to SWEET32 attack' output.txt"
-    os.system(hosts)
-    print("")
-    print(f"{RED}Impact: {RESTORE}")
-    print(f"| {CYAN}Security Improvement{RESTORE}: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes.")
-    print(f"{LPURPLE}Recommendation: {RESTORE}")
-    print(f"| {CYAN}Replace 3DES{RESTORE}: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks.")
-    print("")
-    print("+====================================+")
-    print("")
-    print(f"{RED}Vulnerabilies Name: {RESTORE}")
-    hosts = f"grep -oh 'Broken cipher RC4 is deprecated by RFC 7465' output.txt"
-    os.system(hosts)
-    print("")
-    print(f"{RED}Impact: {RESTORE}")
-    print(f"| {CYAN}Security Enhancement{RESTORE}: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks.")
-    print(f"{LPURPLE}Recommendation: {RESTORE}")
-    print(f"| {CYAN}Disable RC4{RESTORE}: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides.")
-    print("")
-    print("+====================================+")
-    print("")
-    print(f"{RED}Vulnerabilies Name: {RESTORE}")
-    hosts = f"grep -oh 'TLSv1.0\|TLSv1.1' output.txt"
-    os.system(hosts)
-    print("")
-    print(f"{RED}Impact: {RESTORE}")
-    print(f"| {CYAN}Security Risk{RESTORE}: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system.")
-    print(f"{LPURPLE}Recommendation: {RESTORE}")
-    print(f"| {CYAN}Upgrade to TLSv1.2 or TLSv1.3{RESTORE}: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.")
-    print(f"| {CYAN}Disable TLSv1.0 and TLSv1.1{RESTORE}: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake.")
-    print("")
-    print("+====================================+")
-    print("")
+    # Fast Scan
+    if fast_scan:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep -T --color open output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep -T --color filtered output.txt"
+        os.system(hosts)
+        print("")
+        # print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        # hosts = f"grep -T 21/tcp output.txt"  # Change This
+        # os.system(hosts)
+
+        # # Function to check for and display vulnerabilities
+        # def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+        #     hosts = f"grep -q -oh '{grep_pattern}' output.txt"
+        #     if os.system(hosts) == 0:
+        #         print("")
+        #         print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
+        #         print(f"{RED}Impact: {RESTORE}")
+        #         print(description)
+        #         print(f"{LPURPLE}Recommendation: {RESTORE}")
+        #         print(recommendation)
+        #         print("")
+        #         print("+====================================+")
+        #         print("")
+
+        # # Check and display each vulnerability
+        # check_and_display_vulnerability(
+        #     "Anonymous",
+        #     "Anonymous FTP login allowed",
+        #     "| Security Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files. |",
+        #     "| Disable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server. |"
+        # )
+
+    # Port 21 (Done)
+    elif ftp:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep -T --color open output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep -T --color filtered output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        hosts = f"grep -T 21/tcp output.txt"  # Change This
+        os.system(hosts)
+
+        # Function to check for and display vulnerabilities
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+            hosts = f"grep -q -oh '{grep_pattern}' output.txt"
+            if os.system(hosts) == 0:
+                print("")
+                print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
+                print(f"{RED}Impact: {RESTORE}")
+                print(description)
+                print(f"{LPURPLE}Recommendation: {RESTORE}")
+                print(recommendation)
+                print("")
+                print("+====================================+")
+                print("")
+
+        # Check and display each vulnerability
+        check_and_display_vulnerability(
+            "Anonymous",
+            "Anonymous FTP login allowed",
+            "| Security Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files. |",
+            "| Disable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server. |"
+        )
+
+    # Port 22 (Done)
+    elif ssh:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep -T --color open output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep -T --color filtered output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        hosts = f"grep -T 22/tcp output.txt"  # Change This
+        os.system(hosts)
+
+        # Function to check for and display vulnerabilities
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+            hosts = f"grep -q -oh '{grep_pattern}' output.txt"
+            if os.system(hosts) == 0:
+                print("")
+                print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
+                print(f"{RED}Impact: {RESTORE}")
+                print(description)
+                print(f"{LPURPLE}Recommendation: {RESTORE}")
+                print(recommendation)
+                print("")
+                print("+====================================+")
+                print("")
+
+        # Check and display each vulnerability
+        check_and_display_vulnerability(
+            "SSH Authentication Methods Enumeration",
+            "ssh-auth-methods",
+            "| Security Risk: Enumerating SSH authentication methods can reveal potentially insecure methods, which could be targeted by attackers. |",
+            "| Disable Weak Methods: Disable deprecated and weak authentication methods (e.g., password-based authentication and publickey-based authentication) in favor of more secure methods such as public key-based authentication. |"
+        )
+
+        check_and_display_vulnerability(
+            "Weak SSH Enumeration Algorithms",
+            "3des-cbc\|arcfour\|rc4",
+            "| Security Risk: The use of weak SSH enumeration algorithms such as 3des-cbc, arcfour, and rc4 poses a significant security risk. These algorithms have known vulnerabilities and weaknesses that can be exploited by attackers to compromise the confidentiality and integrity of SSH communications. |",
+            "| Update SSH Configuration: It is strongly recommended to update the SSH server configuration to disallow the use of weak encryption algorithms, including 3des-cbc, arcfour, and rc4. |"
+        )
+
+    # Port 23 (Done)
+    elif telnet:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep -T --color open output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep -T --color filtered output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        hosts = f"grep -T 23/tcp output.txt"  # Change This
+        os.system(hosts)
+
+        # Function to check for and display vulnerabilities
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+            hosts = f"grep -q -oh '{grep_pattern}' output.txt"
+            if os.system(hosts) == 0:
+                print("")
+                print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
+                print(f"{RED}Impact: {RESTORE}")
+                print(description)
+                print(f"{LPURPLE}Recommendation: {RESTORE}")
+                print(recommendation)
+                print("")
+                print("+====================================+")
+                print("")
+
+        # Check and display each vulnerability
+        check_and_display_vulnerability(
+            "Telnet Server Without Encryption Support",
+            "Telnet server does not support encryption",
+            "| Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors. |",
+            "| Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication. |"
+        )
+
+    # Port 25 (Hard)
+    elif smtp:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep -T --color open output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep -T --color filtered output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        hosts = f"grep -T 23/tcp output.txt"  # Change This
+        os.system(hosts)
+
+        # Function to check for and display vulnerabilities
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+            hosts = f"grep -q -oh '{grep_pattern}' output.txt"
+            if os.system(hosts) == 0:
+                print("")
+                print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
+                print(f"{RED}Impact: {RESTORE}")
+                print(description)
+                print(f"{LPURPLE}Recommendation: {RESTORE}")
+                print(recommendation)
+                print("")
+                print("+====================================+")
+                print("")
+
+        # Check and display each vulnerability
+        check_and_display_vulnerability(
+            "Telnet Server Without Encryption Support",
+            "Telnet server does not support encryption",
+            "| Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors. |",
+            "| Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication. |"
+        )
+
+    # Port 80 / 443 (Done)
+    elif web:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep -T --color open output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep -T --color filtered output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        hosts = f"grep -T 443/tcp output.txt"  # Change This
+        os.system(hosts)
+
+        # Function to check for and display vulnerabilities
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+            hosts = f"grep -q -oh '{grep_pattern}' output.txt"
+            if os.system(hosts) == 0:
+                print("")
+                print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
+                print(f"{RED}Impact: {RESTORE}")
+                print(description)
+                print(f"{LPURPLE}Recommendation: {RESTORE}")
+                print(recommendation)
+                print("")
+                print("+====================================+")
+                print("")
+
+        # Check and display each vulnerability
+        check_and_display_vulnerability(
+            "HSTS not configured in HTTPS Server",
+            "HSTS not configured in HTTPS Server",
+            "| Improved Security: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks. |",
+            "| Configure your web server to send the HSTS header in the HTTP response.\n| Strict-Transport-Security: max-age=31536000; includeSubDomains |"
+        )
+
+        check_and_display_vulnerability(
+            "Potentially risky methods: TRACE",
+            "TRACE/|DELETE",
+            "| Improved Security: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities. |",
+            "| Disable TRACE Method: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration. |"
+        )
+
+        check_and_display_vulnerability(
+            "64-bit block cipher 3DES vulnerable to SWEET32 attack",
+            "64-bit block cipher 3DES vulnerable to SWEET32 attack",
+            "| Security Improvement: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes. |",
+            "| Replace 3DES: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks. |"
+        )
+
+        check_and_display_vulnerability(
+            "Broken cipher RC4 is deprecated by RFC 7465",
+            "Broken cipher RC4 is deprecated by RFC 7465",
+            "| Security Enhancement: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks. |",
+            "| Disable RC4: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides. |"
+        )
+
+        check_and_display_vulnerability(
+            "TLSv1.0|TLSv1.1",
+            "TLSv1.0\|TLSv1.1",
+            "| Security Risk: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system. |",
+            "| Upgrade to TLSv1.2 or TLSv1.3: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.\n| Disable TLSv1.0 and TLSv1.1: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake. |"
+        )
+
     hosts = f""
     os.system(hosts)
     print("")
+
 
 if __name__ == "__main__":
     main()

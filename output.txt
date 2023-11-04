@@ -1,153 +1,94 @@
-# Nmap 7.94 scan initiated Thu Oct 26 22:10:31 2023 as: nmap -T4 --reason -Pn -sV -p 443 "--script=banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -iL target.txt -oN output.txt -vv
+# Nmap 7.94 scan initiated Sat Nov  4 22:22:19 2023 as: nmap -sV -sC -O -T4 -n -Pn -p- -oA fullfastscan -iL target.txt -oN output.txt -vv
+Warning: Hit PCRE_ERROR_MATCHLIMIT when probing for service http with the regex '^HTTP/1\.0 404 Not Found\r\n(?:[^<]+|<(?!/head>))*?<style>\nbody \{ background-color: #ffffff; color: #000000; \}\nh1 \{ font-family: sans-serif; font-size: 150%; background-color: #9999cc; font-weight: bold; color: #000000; margin-top: 0;\}\n</style>'
 Nmap scan report for apisdx.sadix.com (117.54.4.59)
-Host is up, received user-set (0.0084s latency).
-rDNS record for 117.54.4.59: rev-59-4-54.117.indo.net.id
-Scanned at 2023-10-26 22:10:32 +07 for 81s
-
-PORT    STATE SERVICE  REASON          VERSION
-443/tcp open  ssl/http syn-ack ttl 120 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
-|_http-config-backup: ERROR: Script execution failed (use -d to debug)
-|_http-errors: Couldn't find any error pages.
-|_http-feed: Couldn't find any feeds.
-|_ssl-date: 2023-10-26T15:11:47+00:00; +1s from scanner time.
-|_http-dombased-xss: Couldn't find any DOM based XSS.
-| http-php-version: Logo query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
-|_Credits query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
+Host is up, received user-set (0.0061s latency).
+Scanned at 2023-11-04 22:22:19 +07 for 142s
+Not shown: 65512 closed tcp ports (reset)
+PORT      STATE    SERVICE        REASON          VERSION
+25/tcp    filtered smtp           no-response
+80/tcp    open     http           syn-ack ttl 120 Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: Site doesn't have a title (text/html).
 | http-methods: 
 |   Supported Methods: OPTIONS TRACE GET HEAD POST
 |_  Potentially risky methods: TRACE
-|_http-malware-host: Host appears to be clean
-|_http-mobileversion-checker: No mobile version detected.
-| http-headers: 
-|   Content-Length: 1072
-|   Content-Type: text/html
-|   Last-Modified: Thu, 23 May 2019 03:22:59 GMT
-|   Accept-Ranges: bytes
-|   ETag: "b98a3ad21611d51:0"
-|   Server: Microsoft-IIS/10.0
-|   X-Powered-By: ASP.NET
-|   Date: Thu, 26 Oct 2023 15:10:49 GMT
-|   Connection: close
-|   
-|_  (Request type: HEAD)
-|_http-title: Site doesn't have a title (text/html).
-| http-sitemap-generator: 
-|   Directory structure:
-|     /
-|       Other: 1
-|   Longest directory structure:
-|     Depth: 0
-|     Dir: /
-|   Total files found (by extension):
-|_    Other: 1
-|_http-date: Thu, 26 Oct 2023 15:10:52 GMT; -1s from local time.
-| http-vhosts: 
-| test.sadix.com
-| dns.sadix.com
-|_126 names had status 404
-|_http-fetch: Please enter the complete path of the directory to save data in.
-|_http-referer-checker: Couldn't find any cross-domain scripts.
-|_http-csrf: Couldn't find any CSRF vulnerabilities.
-|_http-jsonp-detection: Couldn't find any JSONP endpoints.
-| ssl-enum-ciphers: 
-|   TLSv1.0: 
-|     ciphers: 
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_CBC_SHA (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_CBC_SHA (dh 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_MD5 (rsa 2048) - C
-|     compressors: 
-|       NULL
-|     cipher preference: server
-|     warnings: 
-|       64-bit block cipher 3DES vulnerable to SWEET32 attack
-|       Broken cipher RC4 is deprecated by RFC 7465
-|       Ciphersuite uses MD5 for message integrity
-|   TLSv1.1: 
-|     ciphers: 
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_CBC_SHA (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_CBC_SHA (dh 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_MD5 (rsa 2048) - C
-|     compressors: 
-|       NULL
-|     cipher preference: server
-|     warnings: 
-|       64-bit block cipher 3DES vulnerable to SWEET32 attack
-|       Broken cipher RC4 is deprecated by RFC 7465
-|       Ciphersuite uses MD5 for message integrity
-|   TLSv1.2: 
-|     ciphers: 
-|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_CBC_SHA (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_CBC_SHA (dh 2048) - A
-|       TLS_RSA_WITH_AES_256_GCM_SHA384 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_GCM_SHA256 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA256 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA256 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_MD5 (rsa 2048) - C
-|     compressors: 
-|       NULL
-|     cipher preference: server
-|     warnings: 
-|       64-bit block cipher 3DES vulnerable to SWEET32 attack
-|       Broken cipher RC4 is deprecated by RFC 7465
-|       Ciphersuite uses MD5 for message integrity
-|_  least strength: C
-|_http-devframework: ASP.NET detected. Found related header.
-|_http-wordpress-users: [Error] Wordpress installation was not found. We couldn't find wp-login.php
-|_http-chrono: Request times for /; avg: 359.68ms; min: 152.42ms; max: 1175.67ms
-| http-comments-displayer: 
-| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=apisdx.sadix.com
-|     
-|     Path: https://apisdx.sadix.com:443/
-|     Line number: 8
-|     Comment: 
-|_        
-| http-useragent-tester: 
-|   Status for browser useragent: 200
-|   Allowed User Agents: 
-|     Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)
-|     libwww
-|     lwp-trivial
-|     libcurl-agent/1.0
-|     PHP/
-|     Python-urllib/2.5
-|     GT::WWW
-|     Snoopy
-|     MFC_Tear_Sample
-|     HTTP::Lite
-|     PHPCrawl
-|     URI::Fetch
-|     Zend_Http_Client
-|     http client
-|     PECL::HTTP
-|     Wget/1.13.4 (linux-gnu)
-|_    WWW-Mechanize/1.34
-| http-security-headers: 
-|   Strict_Transport_Security: 
-|_    HSTS not configured in HTTPS Server
+85/tcp    filtered mit-ml-dev     no-response
+161/tcp   filtered snmp           no-response
+440/tcp   open     tcpwrapped     syn-ack ttl 57
+442/tcp   open     ssl/cvc_hostd? syn-ack ttl 57
+| ssl-cert: Subject: commonName=CN/organizationName=CN/stateOrProvinceName=CN/countryName=CN/organizationalUnitName=CN/localityName=CN
+| Subject Alternative Name: DNS:117.54.4.59, IP Address:117.54.4.59
+| Issuer: commonName=Sangfor/organizationName=Sangfor/stateOrProvinceName=GuangDong/countryName=CN/organizationalUnitName=AF/localityName=ShenZhen
+| Public Key type: rsa
+| Public Key bits: 1024
+| Signature Algorithm: sha1WithRSAEncryption
+| Not valid before: 2015-08-28T11:41:09
+| Not valid after:  2020-08-27T11:41:09
+| MD5:   df80:8af0:2bf0:a3df:6d66:d4d7:953d:88a7
+| SHA-1: fbf0:a465:1a24:dcb6:de77:251d:9b23:0074:2524:f0e5
+| -----BEGIN CERTIFICATE-----
+| MIICTDCCAbUCCQD5R0YJZ5xxyDANBgkqhkiG9w0BAQUFADBlMQswCQYDVQQGEwJD
+| TjESMBAGA1UECBMJR3VhbmdEb25nMREwDwYDVQQHEwhTaGVuWmhlbjEQMA4GA1UE
+| ChMHU2FuZ2ZvcjELMAkGA1UECxMCQUYxEDAOBgNVBAMTB1Nhbmdmb3IwHhcNMTUw
+| ODI4MTE0MTA5WhcNMjAwODI3MTE0MTA5WjBOMQswCQYDVQQGEwJDTjELMAkGA1UE
+| CBMCQ04xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJDTjELMAkGA1UECxMCQ04xCzAJ
+| BgNVBAMTAkNOMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAX1CTgqux0JJU
+| 9L0RZPVfec2PeacNH4M7Oe9Dbmg6iamATfpYgu8gGqiMXa1UUcGXDhKLXj2IABOj
+| nDctdLi+0DHIcZIn1trBkOrvzl/fvCSttLlJIxpNVhIe4kjsSyi7ggXRvmvM622O
+| YI6wRjNP9QW/iEzhkUomMnlkAVyICQIDAQABoyAwHjAcBgNVHREEFTATggsxMTcu
+| NTQuNC41OYcEdTYEOzANBgkqhkiG9w0BAQUFAAOBgQDYzQZZC4DbqNSaG3PrzJjZ
+| liLBtAGxdB808rWcmIK+IIXgd1bPbrvWAZ3sMSLlimoAuRGiDOOlko86kU+ZpTXe
+| vkvOJCOUX+22cNVjjw7tOezDKzc8OSONGabJZ6Rzql2JWyZcAfrxWsnl4hoWU8yU
+| dHNmNetdNJNUb5fUzBKeFA==
+|_-----END CERTIFICATE-----
+|_ssl-date: 2023-11-04T15:24:40+00:00; 0s from scanner time.
+| fingerprint-strings: 
+|   GenericLines: 
+|     HTTP/1.0 400 Bad Request
+|     Date: Sat, 04 Nov 2023 15:23:10 GMT
+|     Server: SinforHttpd/1.0
+|     Connection: close
+|     Content-Type: text/html
+|     <HTML><HEAD><TITLE>400 Bad Request</TITLE></HEAD>
+|     <BODY><H1>400 Bad Request</H1>
+|     Your client has issued a malformed or illegal request.
+|     </BODY></HTML>
+|   GetRequest: 
+|     HTTP/1.1 200 OK
+|     Date: Sat, 04 Nov 2023 15:23:11 GMT
+|     Server: SinforHttpd/1.0
+|     Connection: close
+|     Content-Type: text/html; charset=utf-8
+|     Content-Length: 1352
+|     Cache-Control: no-cache,must-revalidate
+|     Last-Modified: Wed, 30 Aug 2017 04:06:06 GMT
+|     <!DOCTYPE html>
+|     <html>
+|     <head>
+|     <meta http-equiv="expires" content="0">
+|     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+|     <meta name="robots" content="noindex"> <!--
+|     <meta name="robots" content="nofollow"> <!--
+|     <meta name="robots" content="noarchive"> <!--
+|     <title>Identity Authentication System</title>
+|     <link href="./css/style.css" rel="stylesheet" type="text/css" />
+|     </head>
+|     <body>
+|     <div class="dialog">
+|     <div class="dia-inner">
+|     <div class="dia-head ico-lock">
+|     id="title1">Identity Authentication System</h2>
+|   HTTPOptions: 
+|     HTTP/1.0 400 Bad Request
+|     Date: Sat, 04 Nov 2023 15:23:11 GMT
+|     Server: SinforHttpd/1.0
+|     Connection: close
+|     Content-Type: text/html
+|     <HTML><HEAD><TITLE>400 Bad Request</TITLE></HEAD>
+|     <BODY><H1>400 Bad Request</H1>
+|     Your client has issued a malformed or illegal request.
+|_    </BODY></HTML>
+443/tcp   open     ssl/http       syn-ack ttl 120 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
 | ssl-cert: Subject: commonName=*.sadix.com
 | Subject Alternative Name: DNS:*.sadix.com, DNS:sadix.com
 | Issuer: commonName=Go Daddy Secure Certificate Authority - G2/organizationName=GoDaddy.com, Inc./stateOrProvinceName=Arizona/countryName=US/organizationalUnitName=http://certs.godaddy.com/repository//localityName=Scottsdale
@@ -195,15 +136,257 @@ PORT    STATE SERVICE  REASON          VERSION
 | jkCB8wc4GwJEADCiuGYXkiKdy+MTzqqgNTXRBU/BSOeKd4onxnNkoicuVicxAYib
 | NlyA/NuCV+IxeLCZ5gUmrb7ACjqshK1ttHIviIqAQH4M12yqmFBJrPqzwg==
 |_-----END CERTIFICATE-----
-|_http-vuln-cve2014-3704: ERROR: Script execution failed (use -d to debug)
-|_http-wordpress-enum: Nothing found amongst the top 100 resources,use --script-args search-limit=<number|all> for deeper analysis)
+| tls-alpn: 
+|   h2
+|_  http/1.1
+|_http-title: Site doesn't have a title (text/html).
+| http-methods: 
+|   Supported Methods: OPTIONS TRACE GET HEAD POST
+|_  Potentially risky methods: TRACE
 | http-server-header: 
 |   Microsoft-HTTPAPI/2.0
 |_  Microsoft-IIS/10.0
-|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
-|_http-litespeed-sourcecode-download: Request with null byte did not work. This web server might not be vulnerable
+|_ssl-date: 2023-11-04T15:24:40+00:00; 0s from scanner time.
+800/tcp   filtered mdbs_daemon    no-response
+850/tcp   filtered unknown        no-response
+851/tcp   filtered unknown        no-response
+4009/tcp  open     chimera-hwm?   syn-ack ttl 57
+4430/tcp  open     ssl/http       syn-ack ttl 57  Apache httpd
+| http-robots.txt: 1 disallowed entry 
+|_/ 
+|_http-title: Site doesn't have a title (text/html; charset=utf-8).
+| ssl-cert: Subject: commonName=SANGFOR/organizationName=SANGFOR/stateOrProvinceName=GD/countryName=CN/emailAddress=support@sangfor.com.cn/organizationalUnitName=SANGFOR/localityName=SZ
+| Issuer: commonName=SANGFOR/organizationName=SANGFOR/stateOrProvinceName=GD/countryName=CN/emailAddress=support@sangfor.com.cn/organizationalUnitName=SANGFOR/localityName=SZ
+| Public Key type: rsa
+| Public Key bits: 1024
+| Signature Algorithm: sha1WithRSAEncryption
+| Not valid before: 2014-10-16T11:46:00
+| Not valid after:  2024-10-13T11:46:00
+| MD5:   2562:f587:4204:ff4a:3442:818d:89ca:3c7a
+| SHA-1: a4ec:1231:3e23:0b4a:b068:cda0:0bdc:b95a:33ba:6cc4
+| -----BEGIN CERTIFICATE-----
+| MIIDdTCCAt6gAwIBAgIJANm6ACiAt2gxMA0GCSqGSIb3DQEBBQUAMIGEMQswCQYD
+| VQQGEwJDTjELMAkGA1UECBMCR0QxCzAJBgNVBAcTAlNaMRAwDgYDVQQKEwdTQU5H
+| Rk9SMRAwDgYDVQQLEwdTQU5HRk9SMRAwDgYDVQQDEwdTQU5HRk9SMSUwIwYJKoZI
+| hvcNAQkBFhZzdXBwb3J0QHNhbmdmb3IuY29tLmNuMB4XDTE0MTAxNjExNDYwMFoX
+| DTI0MTAxMzExNDYwMFowgYQxCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJHRDELMAkG
+| A1UEBxMCU1oxEDAOBgNVBAoTB1NBTkdGT1IxEDAOBgNVBAsTB1NBTkdGT1IxEDAO
+| BgNVBAMTB1NBTkdGT1IxJTAjBgkqhkiG9w0BCQEWFnN1cHBvcnRAc2FuZ2Zvci5j
+| b20uY24wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK+Ae/VPlzE4qN6wQ0pd
+| hjb2Nssln5dUj6TIg4/q5zOy/oIxNaiT5dZAYEvt5qHMylr9f0QXAopc9f5Q/G5A
+| 2AEEiUXhoOqLheNN7BPRJFH794h7Egpatn+0KrdcMbl1D0kIiqdIHameP1a4NeVP
+| 6AGkgTF3rHt1dzYPyWsR+flTAgMBAAGjgewwgekwHQYDVR0OBBYEFPviF1ob/AnF
+| KprYpjOAstqXIB0sMIG5BgNVHSMEgbEwga6AFPviF1ob/AnFKprYpjOAstqXIB0s
+| oYGKpIGHMIGEMQswCQYDVQQGEwJDTjELMAkGA1UECBMCR0QxCzAJBgNVBAcTAlNa
+| MRAwDgYDVQQKEwdTQU5HRk9SMRAwDgYDVQQLEwdTQU5HRk9SMRAwDgYDVQQDEwdT
+| QU5HRk9SMSUwIwYJKoZIhvcNAQkBFhZzdXBwb3J0QHNhbmdmb3IuY29tLmNuggkA
+| 2boAKIC3aDEwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQCJ+ByljP6R
+| EQQaRUeTjRun+w8IUUz/xWcUB3Wf/tWBqczLFtKYO60ga1RrSVVqkHO2peMeYRj8
+| Tf6ybRiNsajsAwskNz52mmqpVBENlkc5SyhS+R6xDFdMyOYkLyMlQwJA4tM4Zzpv
+| LZ5+dszGO+j9gG0KbOd32EJ/m97PM6aMhA==
+|_-----END CERTIFICATE-----
+|_http-server-header: Apache
+|_ssl-date: 2023-11-04T15:24:40+00:00; 0s from scanner time.
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+6080/tcp  open     gue?           syn-ack ttl 120
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.1 404 Not Found
+|     Content-Type: text/html;charset=utf-8
+|     Content-Length: 974
+|     Date: Sat, 04 Nov 2023 15:23:22 GMT
+|     Connection: close
+|     Server: 
+|     <html><head><title>ArcGIS for Server Error</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>Page not found</h1><HR size="1" noshade="noshade"><p><b>Type:</b> Status
+|   GetRequest: 
+|     HTTP/1.1 302 Found
+|     Set-Cookie: JSESSIONID=E344408A7C5048BDCDEAE137F076CD26; Path=/; HttpOnly
+|     Location: http://localhost:6080/arcgis
+|     Content-Type: text/html;charset=ISO-8859-1
+|     Content-Length: 0
+|     Date: Sat, 04 Nov 2023 15:22:57 GMT
+|     Connection: close
+|     Server:
+|   HTTPOptions: 
+|     HTTP/1.1 302 Found
+|     Set-Cookie: JSESSIONID=8DADB759EADA6871E6CB5DC7F7ECD669; Path=/; HttpOnly
+|     Location: http://localhost:6080/arcgis
+|     Content-Type: text/html;charset=ISO-8859-1
+|     Content-Length: 0
+|     Date: Sat, 04 Nov 2023 15:22:57 GMT
+|     Connection: close
+|     Server:
+|   Help, SSLSessionReq, TLSSessionReq: 
+|     HTTP/1.1 400 Bad Request
+|     Transfer-Encoding: chunked
+|     Date: Sat, 04 Nov 2023 15:23:12 GMT
+|     Connection: close
+|     Server:
+|   Kerberos: 
+|     HTTP/1.1 400 Bad Request
+|     Date: Sat, 04 Nov 2023 15:23:12 GMT
+|     Connection: close
+|     Server:
+|   RTSPRequest: 
+|     HTTP/1.1 505 HTTP Version Not Supported
+|     Date: Sat, 04 Nov 2023 15:22:57 GMT
+|     Connection: close
+|_    Server:
+7547/tcp  filtered cwmp           no-response
+8000/tcp  filtered http-alt       no-response
+8001/tcp  filtered vcom-tunnel    no-response
+8080/tcp  open     http           syn-ack ttl 120 Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+| http-methods: 
+|   Supported Methods: OPTIONS TRACE GET HEAD POST
+|_  Potentially risky methods: TRACE
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: Site doesn't have a title (text/html).
+8848/tcp  open     http           syn-ack ttl 57  Apache httpd
+|_http-server-header: Apache
+| http-robots.txt: 1 disallowed entry 
+|_/ 
+|_http-title: Site doesn't have a title (text/html; charset=utf-8).
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+9000/tcp  open     cslistener?    syn-ack ttl 57
+| fingerprint-strings: 
+|   DNSStatusRequestTCP, DNSVersionBindReqTCP, FourOhFourRequest, GenericLines, GetRequest, HTTPOptions, Help, JavaRMI, Kerberos, LANDesk-RC, LDAPBindReq, LDAPSearchReq, LPDString, NCP, NotesRPC, RPCCheck, RTSPRequest, SIPOptions, SMBProgNeg, SSLSessionReq, TLSSessionReq, TerminalServer, TerminalServerCookie, WMSRequest, X11Probe, afp, giop, ms-sql-s, oracle-tns: 
+|_    yesorno
+22345/tcp filtered unknown        no-response
+30005/tcp filtered unknown        no-response
+51111/tcp open     unknown        syn-ack ttl 57
+58000/tcp filtered unknown        no-response
+3 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at https://nmap.org/cgi-bin/submit.cgi?new-service :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port442-TCP:V=7.94%T=SSL%I=7%D=11/4%Time=654661DE%P=x86_64-pc-linux-gnu
+SF:%r(GenericLines,11D,"HTTP/1\.0\x20400\x20Bad\x20Request\r\nDate:\x20Sat
+SF:,\x2004\x20Nov\x202023\x2015:23:10\x20GMT\r\nServer:\x20SinforHttpd/1\.
+SF:0\r\nConnection:\x20close\r\nContent-Type:\x20text/html\r\n\r\n<HTML><H
+SF:EAD><TITLE>400\x20Bad\x20Request</TITLE></HEAD>\n<BODY><H1>400\x20Bad\x
+SF:20Request</H1>\nYour\x20client\x20has\x20issued\x20a\x20malformed\x20or
+SF:\x20illegal\x20request\.\n</BODY></HTML>\n")%r(GetRequest,641,"HTTP/1\.
+SF:1\x20200\x20OK\r\nDate:\x20Sat,\x2004\x20Nov\x202023\x2015:23:11\x20GMT
+SF:\r\nServer:\x20SinforHttpd/1\.0\r\nConnection:\x20close\r\nContent-Type
+SF::\x20text/html;\x20charset=utf-8\r\nContent-Length:\x201352\r\nCache-Co
+SF:ntrol:\x20no-cache,must-revalidate\r\nLast-Modified:\x20Wed,\x2030\x20A
+SF:ug\x202017\x2004:06:06\x20GMT\r\n\r\n<!DOCTYPE\x20html>\r\n<html>\r\n<h
+SF:ead>\r\n<meta\x20http-equiv=\"expires\"\x20content=\"0\">\r\n<meta\x20h
+SF:ttp-equiv=\"Content-Type\"\x20content=\"text/html;\x20charset=utf-8\">\
+SF:r\n<meta\x20name=\"robots\"\x20content=\"noindex\">\t\x20\x20<!--\xe9\x
+SF:99\x90\xe5\x88\xb6\xe7\xb4\xa2\xe5\xbc\x95\xe9\xa6\x96\xe9\xa1\xb5\xe4\
+SF:xbf\xa1\xe6\x81\xaf-->\r\n<meta\x20name=\"robots\"\x20content=\"nofollo
+SF:w\">\t\x20\x20<!--\xe9\x99\x90\xe5\x88\xb6\xe7\xb4\xa2\xe5\xbc\x95\xe9\
+SF:xa6\x96\xe9\xa1\xb5\xe4\xbf\xa1\xe6\x81\xaf-->\r\n<meta\x20name=\"robot
+SF:s\"\x20content=\"noarchive\">\x20\x20\x20\x20<!--\xe9\x99\x90\xe5\x88\x
+SF:b6\xe5\xbb\xba\xe7\xab\x8b\xe7\xbd\x91\xe9\xa1\xb5\xe5\xbf\xab\xe7\x85\
+SF:xa7-->\r\n<title>Identity\x20Authentication\x20System</title>\r\n<link\
+SF:x20href=\"\./css/style\.css\"\x20rel=\"stylesheet\"\x20type=\"text/css\
+SF:"\x20/>\r\n</head>\r\n<body>\r\n<div\x20class=\"dialog\">\r\n\x20\x20<d
+SF:iv\x20class=\"dia-inner\">\r\n\x20\x20\x20\x20<div\x20class=\"dia-head\
+SF:x20ico-lock\">\r\n\x20\x20\x20\x20\x20\x20<h2\x20id=\"title1\">Identity
+SF:\x20Authentication\x20System</h2>\r\n\x20\x20\x20\x20</d")%r(HTTPOption
+SF:s,11D,"HTTP/1\.0\x20400\x20Bad\x20Request\r\nDate:\x20Sat,\x2004\x20Nov
+SF:\x202023\x2015:23:11\x20GMT\r\nServer:\x20SinforHttpd/1\.0\r\nConnectio
+SF:n:\x20close\r\nContent-Type:\x20text/html\r\n\r\n<HTML><HEAD><TITLE>400
+SF:\x20Bad\x20Request</TITLE></HEAD>\n<BODY><H1>400\x20Bad\x20Request</H1>
+SF:\nYour\x20client\x20has\x20issued\x20a\x20malformed\x20or\x20illegal\x2
+SF:0request\.\n</BODY></HTML>\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port6080-TCP:V=7.94%I=7%D=11/4%Time=654661D0%P=x86_64-pc-linux-gnu%r(Ge
+SF:tRequest,10B,"HTTP/1\.1\x20302\x20Found\r\nSet-Cookie:\x20JSESSIONID=E3
+SF:44408A7C5048BDCDEAE137F076CD26;\x20Path=/;\x20HttpOnly\r\nLocation:\x20
+SF:http://localhost:6080/arcgis\r\nContent-Type:\x20text/html;charset=ISO-
+SF:8859-1\r\nContent-Length:\x200\r\nDate:\x20Sat,\x2004\x20Nov\x202023\x2
+SF:015:22:57\x20GMT\r\nConnection:\x20close\r\nServer:\x20\x20\r\n\r\n")%r
+SF:(HTTPOptions,10B,"HTTP/1\.1\x20302\x20Found\r\nSet-Cookie:\x20JSESSIONI
+SF:D=8DADB759EADA6871E6CB5DC7F7ECD669;\x20Path=/;\x20HttpOnly\r\nLocation:
+SF:\x20http://localhost:6080/arcgis\r\nContent-Type:\x20text/html;charset=
+SF:ISO-8859-1\r\nContent-Length:\x200\r\nDate:\x20Sat,\x2004\x20Nov\x20202
+SF:3\x2015:22:57\x20GMT\r\nConnection:\x20close\r\nServer:\x20\x20\r\n\r\n
+SF:")%r(RTSPRequest,6E,"HTTP/1\.1\x20505\x20HTTP\x20Version\x20Not\x20Supp
+SF:orted\r\nDate:\x20Sat,\x2004\x20Nov\x202023\x2015:22:57\x20GMT\r\nConne
+SF:ction:\x20close\r\nServer:\x20\x20\r\n\r\n")%r(Help,80,"HTTP/1\.1\x2040
+SF:0\x20Bad\x20Request\r\nTransfer-Encoding:\x20chunked\r\nDate:\x20Sat,\x
+SF:2004\x20Nov\x202023\x2015:23:12\x20GMT\r\nConnection:\x20close\r\nServe
+SF:r:\x20\x20\r\n\r\n0\r\n\r\n")%r(SSLSessionReq,80,"HTTP/1\.1\x20400\x20B
+SF:ad\x20Request\r\nTransfer-Encoding:\x20chunked\r\nDate:\x20Sat,\x2004\x
+SF:20Nov\x202023\x2015:23:12\x20GMT\r\nConnection:\x20close\r\nServer:\x20
+SF:\x20\r\n\r\n0\r\n\r\n")%r(TLSSessionReq,80,"HTTP/1\.1\x20400\x20Bad\x20
+SF:Request\r\nTransfer-Encoding:\x20chunked\r\nDate:\x20Sat,\x2004\x20Nov\
+SF:x202023\x2015:23:12\x20GMT\r\nConnection:\x20close\r\nServer:\x20\x20\r
+SF:\n\r\n0\r\n\r\n")%r(Kerberos,5F,"HTTP/1\.1\x20400\x20Bad\x20Request\r\n
+SF:Date:\x20Sat,\x2004\x20Nov\x202023\x2015:23:12\x20GMT\r\nConnection:\x2
+SF:0close\r\nServer:\x20\x20\r\n\r\n")%r(FourOhFourRequest,467,"HTTP/1\.1\
+SF:x20404\x20Not\x20Found\r\nContent-Type:\x20text/html;charset=utf-8\r\nC
+SF:ontent-Length:\x20974\r\nDate:\x20Sat,\x2004\x20Nov\x202023\x2015:23:22
+SF:\x20GMT\r\nConnection:\x20close\r\nServer:\x20\x20\r\n\r\n<html><head><
+SF:title>ArcGIS\x20for\x20Server\x20Error</title><style><!--H1\x20{font-fa
+SF:mily:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-
+SF:size:22px;}\x20H2\x20{font-family:Tahoma,Arial,sans-serif;color:white;b
+SF:ackground-color:#525D76;font-size:16px;}\x20H3\x20{font-family:Tahoma,A
+SF:rial,sans-serif;color:white;background-color:#525D76;font-size:14px;}\x
+SF:20BODY\x20{font-family:Tahoma,Arial,sans-serif;color:black;background-c
+SF:olor:white;}\x20B\x20{font-family:Tahoma,Arial,sans-serif;color:white;b
+SF:ackground-color:#525D76;}\x20P\x20{font-family:Tahoma,Arial,sans-serif;
+SF:background:white;color:black;font-size:12px;}A\x20{color\x20:\x20black;
+SF:}A\.name\x20{color\x20:\x20black;}HR\x20{color\x20:\x20#525D76;}--></st
+SF:yle>\x20</head><body><h1>Page\x20not\x20found</h1><HR\x20size=\"1\"\x20
+SF:noshade=\"noshade\"><p><b>Type:</b>\x20Status");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port9000-TCP:V=7.94%I=7%D=11/4%Time=654661CB%P=x86_64-pc-linux-gnu%r(Ge
+SF:nericLines,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(GetRequest,12
+SF:,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(HTTPOptions,12,"\0\0\0\x08
+SF:yesorno\0\x08\0\xe3\x85P\xff")%r(RTSPRequest,12,"\0\0\0\x08yesorno\0\x0
+SF:8\0\xe3\x85P\xff")%r(RPCCheck,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xf
+SF:f")%r(DNSVersionBindReqTCP,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")
+SF:%r(DNSStatusRequestTCP,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(H
+SF:elp,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(SSLSessionReq,12,"\0
+SF:\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(TerminalServerCookie,12,"\0\0\
+SF:0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(TLSSessionReq,12,"\0\0\0\x08yesor
+SF:no\0\x08\0\xe3\x85P\xff")%r(Kerberos,12,"\0\0\0\x08yesorno\0\x08\0\xe3\
+SF:x85P\xff")%r(SMBProgNeg,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(
+SF:X11Probe,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(FourOhFourReque
+SF:st,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(LPDString,12,"\0\0\0\
+SF:x08yesorno\0\x08\0\xe3\x85P\xff")%r(LDAPSearchReq,12,"\0\0\0\x08yesorno
+SF:\0\x08\0\xe3\x85P\xff")%r(LDAPBindReq,12,"\0\0\0\x08yesorno\0\x08\0\xe3
+SF:\x85P\xff")%r(SIPOptions,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r
+SF:(LANDesk-RC,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(TerminalServ
+SF:er,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(NCP,12,"\0\0\0\x08yes
+SF:orno\0\x08\0\xe3\x85P\xff")%r(NotesRPC,12,"\0\0\0\x08yesorno\0\x08\0\xe
+SF:3\x85P\xff")%r(JavaRMI,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(W
+SF:MSRequest,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(oracle-tns,12,
+SF:"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff")%r(ms-sql-s,12,"\0\0\0\x08yeso
+SF:rno\0\x08\0\xe3\x85P\xff")%r(afp,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P
+SF:\xff")%r(giop,12,"\0\0\0\x08yesorno\0\x08\0\xe3\x85P\xff");
+OS fingerprint not ideal because: Didn't receive UDP response. Please try again with -sSU
+No OS matches for host
+TCP/IP fingerprint:
+SCAN(V=7.94%E=4%D=11/4%OT=80%CT=1%CU=%PV=N%G=N%TM=65466239%P=x86_64-pc-linux-gnu)
+SEQ(SP=100%GCD=1%ISR=FE%TI=I%CI=Z%II=I%SS=O%TS=A)
+SEQ(SP=102%GCD=1%ISR=106%TI=I%CI=Z%II=I%SS=O%TS=A)
+OPS(O1=M584NW8ST11%O2=M584NW8ST11%O3=M584NW8NNT11%O4=M584NW8ST11%O5=M584NW8ST11%O6=M584ST11)
+WIN(W1=2000%W2=2000%W3=2000%W4=2000%W5=2000%W6=2000)
+ECN(R=Y%DF=Y%TG=80%W=2000%O=M584NW8NNS%CC=Y%Q=)
+T1(R=Y%DF=Y%TG=80%S=O%A=S+%F=AS%RD=0%Q=)
+T2(R=N)
+T3(R=N)
+T4(R=N)
+T5(R=Y%DF=Y%TG=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)
+T6(R=Y%DF=Y%TG=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)
+T7(R=N)
+U1(R=N)
+IE(R=Y%DFI=N%TG=40%CD=S)
+
+Uptime guess: 10.864 days (since Wed Oct 25 01:40:09 2023)
+TCP Sequence Prediction: Difficulty=258 (Good luck!)
+IP ID Sequence Generation: Incremental
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
+Host script results:
+|_clock-skew: mean: 0s, deviation: 0s, median: 0s
+
 Read data files from: /usr/bin/../share/nmap
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Thu Oct 26 22:11:53 2023 -- 1 IP address (1 host up) scanned in 82.23 seconds
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Nov  4 22:24:41 2023 -- 1 IP address (1 host up) scanned in 142.58 seconds
