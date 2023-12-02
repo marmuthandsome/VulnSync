@@ -1,35 +1,83 @@
-# Nmap 7.94 scan initiated Sat Nov  4 22:29:25 2023 as: nmap -T4 --reason -Pn -sV -p 443 "--script=banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -iL target.txt -oN output.txt -vv
+# Nmap 7.94 scan initiated Sat Dec  2 21:00:08 2023 as: nmap -T4 --reason -Pn -sV -p 443 "--script=banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -iL target.txt -oN output.txt -vv
 Nmap scan report for apisdx.sadix.com (117.54.4.59)
-Host is up, received user-set (0.0090s latency).
+Host is up, received user-set (0.015s latency).
 rDNS record for 117.54.4.59: rev-59-4-54.117.indo.net.id
-Scanned at 2023-11-04 22:29:26 +07 for 78s
+Scanned at 2023-12-02 21:00:08 WIB for 42s
 
 PORT    STATE SERVICE  REASON          VERSION
 443/tcp open  ssl/http syn-ack ttl 120 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
-|_ssl-date: 2023-11-04T15:30:40+00:00; +1s from scanner time.
-| http-useragent-tester: 
-|   Status for browser useragent: 200
-|   Allowed User Agents: 
-|     Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)
-|     libwww
-|     lwp-trivial
-|     libcurl-agent/1.0
-|     PHP/
-|     Python-urllib/2.5
-|     GT::WWW
-|     Snoopy
-|     MFC_Tear_Sample
-|     HTTP::Lite
-|     PHPCrawl
-|     URI::Fetch
-|     Zend_Http_Client
-|     http client
-|     PECL::HTTP
-|     Wget/1.13.4 (linux-gnu)
-|_    WWW-Mechanize/1.34
+| ssl-enum-ciphers: 
+|   TLSv1.2: 
+|     ciphers: 
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (ecdh_x25519) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (ecdh_x25519) - A
+|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (ecdh_x25519) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (ecdh_x25519) - A
+|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A
+|       TLS_DHE_RSA_WITH_AES_256_CBC_SHA (dh 2048) - A
+|       TLS_DHE_RSA_WITH_AES_128_CBC_SHA (dh 2048) - A
+|       TLS_RSA_WITH_AES_256_GCM_SHA384 (rsa 2048) - A
+|       TLS_RSA_WITH_AES_128_GCM_SHA256 (rsa 2048) - A
+|       TLS_RSA_WITH_AES_256_CBC_SHA256 (rsa 2048) - A
+|       TLS_RSA_WITH_AES_128_CBC_SHA256 (rsa 2048) - A
+|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
+|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
+|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C
+|       TLS_RSA_WITH_RC4_128_SHA (rsa 2048) - C
+|       TLS_RSA_WITH_RC4_128_MD5 (rsa 2048) - C
+|     compressors: 
+|       NULL
+|     cipher preference: server
+|     warnings: 
+|       64-bit block cipher 3DES vulnerable to SWEET32 attack
+|       Broken cipher RC4 is deprecated by RFC 7465
+|       Ciphersuite uses MD5 for message integrity
+|_  least strength: C
+|_http-devframework: Couldn't determine the underlying framework or CMS. Try increasing 'httpspider.maxpagecount' value to spider more pages.
+|_http-errors: Couldn't find any error pages.
+|_http-jsonp-detection: Couldn't find any JSONP endpoints.
+|_http-wordpress-users: [Error] Wordpress installation was not found. We couldn't find wp-login.php
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-fetch: Please enter the complete path of the directory to save data in.
+|_http-date: Sat, 02 Dec 2023 14:00:22 GMT; -1s from local time.
+|_http-mobileversion-checker: No mobile version detected.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+|_ssl-date: 2023-12-02T14:00:46+00:00; 0s from scanner time.
+|_http-feed: Couldn't find any feeds.
+| http-methods: 
+|_  Supported Methods: GET
+| http-security-headers: 
+|   Strict_Transport_Security: 
+|     Header: Strict-Transport-Security: max-age=31536000
+|   X_Frame_Options: 
+|     Header: X-Frame-Options: SAMEORIGIN
+|     Description: The browser must not display this content in any frame from a page of different origin than the content itself.
+|   X_XSS_Protection: 
+|     Header: X-XSS-Protection: 1; mode=block
+|     Description: The browser will prevent the rendering of the page when XSS is detected.
+|   X_Content_Type_Options: 
+|     Header: X-Content-Type-Options: nosniff
+|     Description: Will prevent the browser from MIME-sniffing a response away from the declared content-type. 
+|   Content_Security_Policy: 
+|     Header: Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval'
+|     Description: Define loading policy for all resources type in case of a resource type dedicated directive is not defined (fallback).
+|   X_Permitted_Cross_Domain_Policies: 
+|     Header: X-Permitted-Cross-Domain-Policies: none
+|_    Description: No policy files are allowed anywhere on the target server, including this master policy file. 
+| http-php-version: Logo query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
+|_Credits query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
+|_http-malware-host: Host appears to be clean
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+| http-vhosts: 
+| 126 names had status 404
+| home.sadix.com
+|_help.sadix.com
 | ssl-cert: Subject: commonName=*.sadix.com
 | Subject Alternative Name: DNS:*.sadix.com, DNS:sadix.com
-| Issuer: commonName=Go Daddy Secure Certificate Authority - G2/organizationName=GoDaddy.com, Inc./stateOrProvinceName=Arizona/countryName=US/organizationalUnitName=http://certs.godaddy.com/repository//localityName=Scottsdale
+| Issuer: commonName=Go Daddy Secure Certificate Authority - G2/organizationName=GoDaddy.com, Inc./stateOrProvinceName=Arizona/countryName=US/localityName=Scottsdale/organizationalUnitName=http://certs.godaddy.com/repository/
 | Public Key type: rsa
 | Public Key bits: 2048
 | Signature Algorithm: sha256WithRSAEncryption
@@ -74,80 +122,54 @@ PORT    STATE SERVICE  REASON          VERSION
 | jkCB8wc4GwJEADCiuGYXkiKdy+MTzqqgNTXRBU/BSOeKd4onxnNkoicuVicxAYib
 | NlyA/NuCV+IxeLCZ5gUmrb7ACjqshK1ttHIviIqAQH4M12yqmFBJrPqzwg==
 |_-----END CERTIFICATE-----
-|_http-feed: Couldn't find any feeds.
-| ssl-enum-ciphers: 
-|   TLSv1.0: 
-|     ciphers: 
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_CBC_SHA (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_CBC_SHA (dh 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_MD5 (rsa 2048) - C
-|     compressors: 
-|       NULL
-|     cipher preference: server
-|     warnings: 
-|       64-bit block cipher 3DES vulnerable to SWEET32 attack
-|       Broken cipher RC4 is deprecated by RFC 7465
-|       Ciphersuite uses MD5 for message integrity
-|   TLSv1.1: 
-|     ciphers: 
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_CBC_SHA (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_CBC_SHA (dh 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_MD5 (rsa 2048) - C
-|     compressors: 
-|       NULL
-|     cipher preference: server
-|     warnings: 
-|       64-bit block cipher 3DES vulnerable to SWEET32 attack
-|       Broken cipher RC4 is deprecated by RFC 7465
-|       Ciphersuite uses MD5 for message integrity
-|   TLSv1.2: 
-|     ciphers: 
-|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 (dh 2048) - A
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A
-|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A
-|       TLS_DHE_RSA_WITH_AES_256_CBC_SHA (dh 2048) - A
-|       TLS_DHE_RSA_WITH_AES_128_CBC_SHA (dh 2048) - A
-|       TLS_RSA_WITH_AES_256_GCM_SHA384 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_GCM_SHA256 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA256 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA256 (rsa 2048) - A
-|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A
-|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_SHA (rsa 2048) - C
-|       TLS_RSA_WITH_RC4_128_MD5 (rsa 2048) - C
-|     compressors: 
-|       NULL
-|     cipher preference: server
-|     warnings: 
-|       64-bit block cipher 3DES vulnerable to SWEET32 attack
-|       Broken cipher RC4 is deprecated by RFC 7465
-|       Ciphersuite uses MD5 for message integrity
-|_  least strength: C
-| http-methods: 
-|   Supported Methods: OPTIONS TRACE GET HEAD POST
-|_  Potentially risky methods: TRACE
-|_http-date: Sat, 04 Nov 2023 15:29:38 GMT; -1s from local time.
-|_http-title: Site doesn't have a title (text/html).
-|_http-jsonp-detection: Couldn't find any JSONP endpoints.
-|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-litespeed-sourcecode-download: Request with null byte did not work. This web server might not be vulnerable
+|_http-chrono: Request times for /; avg: 175.84ms; min: 161.90ms; max: 219.22ms
+| http-useragent-tester: 
+|   Status for browser useragent: 200
+|   Allowed User Agents: 
+|     Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)
+|     libwww
+|     lwp-trivial
+|     libcurl-agent/1.0
+|     PHP/
+|     Python-urllib/2.5
+|     GT::WWW
+|     Snoopy
+|     MFC_Tear_Sample
+|     HTTP::Lite
+|     PHPCrawl
+|     URI::Fetch
+|     Zend_Http_Client
+|     http client
+|     PECL::HTTP
+|     Wget/1.13.4 (linux-gnu)
+|_    WWW-Mechanize/1.34
+| http-headers: 
+|   Content-Type: text/html
+|   Last-Modified: Thu, 23 May 2019 03:22:59 GMT
+|   Accept-Ranges: bytes
+|   ETag: "b98a3ad21611d51:0"
+|   Strict-Transport-Security: max-age=31536000
+|   X-Frame-Options: SAMEORIGIN
+|   Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval' 
+|   X-Content-Type-Options: nosniff
+|   Referrer-Policy: same-origin
+|   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+|   X-Xss-Protection: 1; mode=block
+|   X-Permitted-Cross-Domain-Policies: none
+|   Date: Sat, 02 Dec 2023 14:00:27 GMT
+|   Connection: close
+|   Content-Length: 1072
+|   
+|_  (Request type: GET)
+|_http-referer-checker: Couldn't find any cross-domain scripts.
+| http-comments-displayer: 
+| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=apisdx.sadix.com
+|     
+|     Path: https://apisdx.sadix.com:443/
+|     Line number: 8
+|     Comment: 
+|_        
 | http-sitemap-generator: 
 |   Directory structure:
 |     /
@@ -157,50 +179,11 @@ PORT    STATE SERVICE  REASON          VERSION
 |     Dir: /
 |   Total files found (by extension):
 |_    Other: 1
-|_http-dombased-xss: Couldn't find any DOM based XSS.
-|_http-referer-checker: Couldn't find any cross-domain scripts.
-| http-comments-displayer: 
-| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=apisdx.sadix.com
-|     
-|     Path: https://apisdx.sadix.com:443/
-|     Line number: 8
-|     Comment: 
-|_        
-|_http-mobileversion-checker: No mobile version detected.
-|_http-config-backup: ERROR: Script execution failed (use -d to debug)
-|_http-litespeed-sourcecode-download: Request with null byte did not work. This web server might not be vulnerable
+|_http-title: Site doesn't have a title (text/html).
 |_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
-| http-vhosts: 
-|_128 names had status 404
-|_http-fetch: Please enter the complete path of the directory to save data in.
-|_http-errors: Couldn't find any error pages.
-|_http-devframework: ASP.NET detected. Found related header.
-|_http-drupal-enum: Nothing found amongst the top 100 resources,use --script-args number=<number|all> for deeper analysis)
-|_http-chrono: Request times for /; avg: 154.42ms; min: 152.11ms; max: 158.10ms
-|_http-wordpress-users: [Error] Wordpress installation was not found. We couldn't find wp-login.php
-|_http-malware-host: Host appears to be clean
-| http-security-headers: 
-|   Strict_Transport_Security: 
-|_    HSTS not configured in HTTPS Server
-| http-server-header: 
-|   Microsoft-HTTPAPI/2.0
-|_  Microsoft-IIS/10.0
-| http-php-version: Logo query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
-|_Credits query returned unknown hash 4e52ceb8b3f877a36303e1fcbc2d4d2e
-| http-headers: 
-|   Content-Length: 1072
-|   Content-Type: text/html
-|   Last-Modified: Thu, 23 May 2019 03:22:59 GMT
-|   Accept-Ranges: bytes
-|   ETag: "b98a3ad21611d51:0"
-|   Server: Microsoft-IIS/10.0
-|   X-Powered-By: ASP.NET
-|   Date: Sat, 04 Nov 2023 15:29:42 GMT
-|   Connection: close
-|   
-|_  (Request type: HEAD)
+|_http-config-backup: ERROR: Script execution failed (use -d to debug)
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
-Read data files from: /usr/bin/../share/nmap
+Read data files from: /opt/homebrew/bin/../share/nmap
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov  4 22:30:44 2023 -- 1 IP address (1 host up) scanned in 78.30 seconds
+# Nmap done at Sat Dec  2 21:00:50 2023 -- 1 IP address (1 host up) scanned in 42.21 seconds

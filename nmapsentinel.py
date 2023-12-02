@@ -219,11 +219,11 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep -T --color open output.txt"
+        hosts = f"grep --color open output.txt"
         os.system(hosts)
         print("")
         print(f"{CYAN}Close Port: {RESTORE}")
-        hosts = f"grep -T --color filtered\|closed output.txt"
+        hosts = f"grep --color 'filtered\|closed' output.txt"
         os.system(hosts)
         print("")
         # print(f"{RED}Vulnerabilies For Port: {RESTORE}")
@@ -252,32 +252,46 @@ Example:
         #     "| Disable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server. |"
         # )
 
+    # Full Scan
+    elif full_scan:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep --color open output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep --color 'filtered\|closed' output.txt"
+        os.system(hosts)
+        print("")
+
+    # Full Vuln
+
     # Port 21 (Done)
     elif ftp:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep -T --color open output.txt"
+        hosts = f"grep --color open output.txt"
         os.system(hosts)
-        print("")
-        print(f"{CYAN}Close Port: {RESTORE}")
-        hosts = f"grep -T --color filtered output.txt"
-        os.system(hosts)
+        # print("")
+        # print(f"{CYAN}Close Port: {RESTORE}")
+        # hosts = f"grep --color 'filtered\|closed' output.txt"
+        # os.system(hosts)
         print("")
         print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep -T 21/tcp output.txt"  # Change This
+        hosts = f"grep 21/tcp output.txt"  # Change This
         os.system(hosts)
 
         # Function to check for and display vulnerabilities
-        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
             hosts = f"grep -q -oh '{grep_pattern}' output.txt"
             if os.system(hosts) == 0:
                 print("")
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
-                print(f"{RED}Impact: {RESTORE}")
-                print(description)
-                print(f"{LPURPLE}Recommendation: {RESTORE}")
-                print(recommendation)
+                print(f"{RED}Severity{RESTORE}: {severity}")
+                print(f"{RED}Impact {RESTORE}: {description}")
+                print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
                 print("+====================================+")
                 print("")
@@ -286,8 +300,9 @@ Example:
         check_and_display_vulnerability(
             "Anonymous",
             "Anonymous FTP login allowed",
-            "| Security Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files. |",
-            "| Disable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server. |"
+            "Low - High",
+            "Security Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files.",
+            "Disable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server."
         )
 
     # Port 22 (Done)
@@ -295,27 +310,26 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep -T --color open output.txt"
+        hosts = f"grep --color open output.txt"
         os.system(hosts)
-        print("")
-        print(f"{CYAN}Close Port: {RESTORE}")
-        hosts = f"grep -T --color filtered output.txt"
-        os.system(hosts)
+        # print("")
+        # print(f"{CYAN}Close Port: {RESTORE}")
+        # hosts = f"grep --color 'filtered\|closed' output.txt"
+        # os.system(hosts)
         print("")
         print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep -T 22/tcp output.txt"  # Change This
+        hosts = f"grep 22/tcp output.txt"  # Change This
         os.system(hosts)
 
         # Function to check for and display vulnerabilities
-        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
             hosts = f"grep -q -oh '{grep_pattern}' output.txt"
             if os.system(hosts) == 0:
                 print("")
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
-                print(f"{RED}Impact: {RESTORE}")
-                print(description)
-                print(f"{LPURPLE}Recommendation: {RESTORE}")
-                print(recommendation)
+                print(f"{RED}Severity{RESTORE}: {severity}")
+                print(f"{RED}Impact {RESTORE}: {description}")
+                print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
                 print("+====================================+")
                 print("")
@@ -324,6 +338,7 @@ Example:
         check_and_display_vulnerability(
             "SSH Authentication Methods Enumeration",
             "ssh-auth-methods",
+            "Informational",
             "| Security Risk: Enumerating SSH authentication methods can reveal potentially insecure methods, which could be targeted by attackers. |",
             "| Disable Weak Methods: Disable deprecated and weak authentication methods (e.g., password-based authentication and publickey-based authentication) in favor of more secure methods such as public key-based authentication. |"
         )
@@ -331,8 +346,9 @@ Example:
         check_and_display_vulnerability(
             "Weak SSH Enumeration Algorithms",
             "3des-cbc\|arcfour\|rc4",
-            "| Security Risk: The use of weak SSH enumeration algorithms such as 3des-cbc, arcfour, and rc4 poses a significant security risk. These algorithms have known vulnerabilities and weaknesses that can be exploited by attackers to compromise the confidentiality and integrity of SSH communications. |",
-            "| Update SSH Configuration: It is strongly recommended to update the SSH server configuration to disallow the use of weak encryption algorithms, including 3des-cbc, arcfour, and rc4. |"
+            "Informational",
+            "Security Risk: The use of weak SSH enumeration algorithms such as 3des-cbc, arcfour, and rc4 poses a significant security risk. These algorithms have known vulnerabilities and weaknesses that can be exploited by attackers to compromise the confidentiality and integrity of SSH communications.",
+            "Update SSH Configuration: It is strongly recommended to update the SSH server configuration to disallow the use of weak encryption algorithms, including 3des-cbc, arcfour, and rc4."
         )
 
     # Port 23 (Done)
@@ -340,27 +356,26 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep -T --color open output.txt"
+        hosts = f"grep --color open output.txt"
         os.system(hosts)
-        print("")
-        print(f"{CYAN}Close Port: {RESTORE}")
-        hosts = f"grep -T --color filtered output.txt"
-        os.system(hosts)
+        # print("")
+        # print(f"{CYAN}Close Port: {RESTORE}")
+        # hosts = f"grep --color 'filtered\|closed' output.txt"
+        # os.system(hosts)
         print("")
         print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep -T 23/tcp output.txt"  # Change This
+        hosts = f"grep 23/tcp output.txt"  # Change This
         os.system(hosts)
 
         # Function to check for and display vulnerabilities
-        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
             hosts = f"grep -q -oh '{grep_pattern}' output.txt"
             if os.system(hosts) == 0:
                 print("")
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
-                print(f"{RED}Impact: {RESTORE}")
-                print(description)
-                print(f"{LPURPLE}Recommendation: {RESTORE}")
-                print(recommendation)
+                print(f"{RED}Severity{RESTORE}: {severity}")
+                print(f"{RED}Impact {RESTORE}: {description}")
+                print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
                 print("+====================================+")
                 print("")
@@ -369,8 +384,9 @@ Example:
         check_and_display_vulnerability(
             "Telnet Server Without Encryption Support",
             "Telnet server does not support encryption",
-            "| Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors. |",
-            "| Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication. |"
+            "Informational",
+            "Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors.",
+            "Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication."
         )
 
     # Port 25 (Hard)
@@ -378,27 +394,26 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep -T --color open output.txt"
+        hosts = f"grep --color open output.txt"
         os.system(hosts)
-        print("")
-        print(f"{CYAN}Close Port: {RESTORE}")
-        hosts = f"grep -T --color filtered output.txt"
-        os.system(hosts)
+        # print("")
+        # print(f"{CYAN}Close Port: {RESTORE}")
+        # hosts = f"grep --color 'filtered\|closed' output.txt"
+        # os.system(hosts)
         print("")
         print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep -T 23/tcp output.txt"  # Change This
+        hosts = f"grep 23/tcp output.txt"  # Change This
         os.system(hosts)
 
         # Function to check for and display vulnerabilities
-        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
             hosts = f"grep -q -oh '{grep_pattern}' output.txt"
             if os.system(hosts) == 0:
                 print("")
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
-                print(f"{RED}Impact: {RESTORE}")
-                print(description)
-                print(f"{LPURPLE}Recommendation: {RESTORE}")
-                print(recommendation)
+                print(f"{RED}Severity{RESTORE}: {severity}")
+                print(f"{RED}Impact {RESTORE}: {description}")
+                print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
                 print("+====================================+")
                 print("")
@@ -407,8 +422,9 @@ Example:
         check_and_display_vulnerability(
             "Telnet Server Without Encryption Support",
             "Telnet server does not support encryption",
-            "| Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors. |",
-            "| Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication. |"
+            "Informational",
+            "Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors.",
+            "Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication."
         )
 
     # Port 80 / 443 (Done)
@@ -416,27 +432,26 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep -T --color open output.txt"
+        hosts = f"grep --color open output.txt"
         os.system(hosts)
-        print("")
-        print(f"{CYAN}Close Port: {RESTORE}")
-        hosts = f"grep -T --color filtered output.txt"
-        os.system(hosts)
+        # print("")
+        # print(f"{CYAN}Close Port: {RESTORE}")
+        # hosts = f"grep --color 'filtered\|closed' output.txt"
+        # os.system(hosts)
         print("")
         print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep -T 443/tcp output.txt"  # Change This
+        hosts = f"grep 443/tcp output.txt"  # Change This
         os.system(hosts)
 
         # Function to check for and display vulnerabilities
-        def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
             hosts = f"grep -q -oh '{grep_pattern}' output.txt"
             if os.system(hosts) == 0:
                 print("")
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
-                print(f"{RED}Impact: {RESTORE}")
-                print(description)
-                print(f"{LPURPLE}Recommendation: {RESTORE}")
-                print(recommendation)
+                print(f"{RED}Severity{RESTORE}: {severity}")
+                print(f"{RED}Impact {RESTORE}: {description}")
+                print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
                 print("+====================================+")
                 print("")
@@ -445,36 +460,41 @@ Example:
         check_and_display_vulnerability(
             "HSTS not configured in HTTPS Server",
             "HSTS not configured in HTTPS Server",
-            "| Improved Security: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks. |",
-            "| Configure your web server to send the HSTS header in the HTTP response.\n| Strict-Transport-Security: max-age=31536000; includeSubDomains |"
+            "Informational",
+            "Improved Security: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks.",
+            "Configure your web server to send the HSTS header in the HTTP response.\n| Strict-Transport-Security: max-age=31536000; includeSubDomains"
         )
 
         check_and_display_vulnerability(
             "Potentially risky methods: TRACE",
             "TRACE/|DELETE",
-            "| Improved Security: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities. |",
-            "| Disable TRACE Method: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration. |"
+            "Informational",
+            "Improved Security: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities.",
+            "Disable TRACE Method: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration."
         )
 
         check_and_display_vulnerability(
             "64-bit block cipher 3DES vulnerable to SWEET32 attack",
             "64-bit block cipher 3DES vulnerable to SWEET32 attack",
-            "| Security Improvement: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes. |",
-            "| Replace 3DES: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks. |"
+            "Informational",
+            "Security Improvement: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes.",
+            "Replace 3DES: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks."
         )
 
         check_and_display_vulnerability(
             "Broken cipher RC4 is deprecated by RFC 7465",
             "Broken cipher RC4 is deprecated by RFC 7465",
-            "| Security Enhancement: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks. |",
-            "| Disable RC4: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides. |"
+            "Informational",
+            "Security Enhancement: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks.",
+            "Disable RC4: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides."
         )
 
         check_and_display_vulnerability(
             "TLSv1.0|TLSv1.1",
             "TLSv1.0\|TLSv1.1",
-            "| Security Risk: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system. |",
-            "| Upgrade to TLSv1.2 or TLSv1.3: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.\n| Disable TLSv1.0 and TLSv1.1: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake. |"
+            "Informational",
+            "Security Risk: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system.",
+            "Upgrade to TLSv1.2 or TLSv1.3: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.\n| Disable TLSv1.0 and TLSv1.1: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake."
         )
 
     hosts = f""
