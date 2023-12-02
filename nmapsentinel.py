@@ -223,7 +223,7 @@ Example:
         os.system(hosts)
         print("")
         print(f"{CYAN}Close Port: {RESTORE}")
-        hosts = f"grep -T --color filtered output.txt"
+        hosts = f"grep -T --color filtered\|closed output.txt"
         os.system(hosts)
         print("")
         # print(f"{RED}Vulnerabilies For Port: {RESTORE}")
