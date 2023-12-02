@@ -69,9 +69,7 @@ Options:
 
 Example:
     {script_name} --fast-scan input.txt
-    {script_name} --full-scan input.txt
-    {script_name} --port 80 input.txt
-    {script_name} --port-specific 22 input.txt -o custom_output.txt
+    {script_name} --ssh input.txt
 """)
 
     input_file = None
