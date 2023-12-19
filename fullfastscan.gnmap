@@ -1,2 +1,0 @@
-# Nmap 7.94 scan initiated Sat Dec  2 20:56:52 2023 as: nmap -sV -sC -O -T4 -n -Pn -p- -oA fullfastscan -iL target.txt -oN output.txt -vv
-# Ports scanned: TCP(65535;1-65535) UDP(0;) SCTP(0;) PROTOCOLS(0;)

@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import re
 
 # Define color codes
 RESTORE = '\033[0m'
@@ -61,7 +62,7 @@ Options:
     {LBLUE}--snmp{RESTORE}                  Perform a scanning port 161, 162, 10161, 10162
     {LBLUE}--ldap{RESTORE}                  Perform a scanning port 389, 636, 3268, 3269
     {LBLUE}--mssql{RESTORE}                 Perform a scanning port 1433
-    {LBLUE}--mysql{RESTORE}                 Perform a scanning port 3306
+    {LBLUE}--mysql{RESTORE}                Perform a scanning port 3306
     {LBLUE}--rdp{RESTORE}                   Perform a scanning port 3389
     {LBLUE}--cassandra{RESTORE}             Perform a scanning port 9042, 9160
     {LBLUE}--cipher{RESTORE}                Perform a scanning cipher vuln
@@ -224,31 +225,6 @@ Example:
         hosts = f"grep --color 'filtered\|closed' output.txt"
         os.system(hosts)
         print("")
-        # print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        # hosts = f"grep -T 21/tcp output.txt"  # Change This
-        # os.system(hosts)
-
-        # # Function to check for and display vulnerabilities
-        # def check_and_display_vulnerability(vulnerability_name, grep_pattern, description, recommendation):
-        #     hosts = f"grep -q -oh '{grep_pattern}' output.txt"
-        #     if os.system(hosts) == 0:
-        #         print("")
-        #         print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
-        #         print(f"{RED}Impact: {RESTORE}")
-        #         print(description)
-        #         print(f"{LPURPLE}Recommendation: {RESTORE}")
-        #         print(recommendation)
-        #         print("")
-        #         print("+====================================+")
-        #         print("")
-
-        # # Check and display each vulnerability
-        # check_and_display_vulnerability(
-        #     "Anonymous",
-        #     "Anonymous FTP login allowed",
-        #     "| Security Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files. |",
-        #     "| Disable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server. |"
-        # )
 
     # Full Scan
     elif full_scan:
@@ -264,6 +240,53 @@ Example:
         print("")
 
     # Full Vuln
+    elif full_vuln:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep --color syn-ack output.txt"
+        os.system(hosts)
+        print("")
+        print(f"{CYAN}Close Port: {RESTORE}")
+        hosts = f"grep --color 'filtered\|closed' output.txt"
+        os.system(hosts)
+        print("")
+        # print(f"{RED}Vulnerabilies For Port: {RESTORE}")
+        # hosts = f"grep 21/tcp output.txt"  # Change This
+        # os.system(hosts)
+
+        with open("output.txt", "r") as file:
+            sample_output = file.read()
+
+        # Define patterns for port and vulnerability
+        port_pattern = re.compile(r"(\d+)/tcp\s+open\s+(\S+)")
+        vulnerability_pattern = re.compile(r"VULNERABLE:(.*?)State: VULNERABLE", re.DOTALL)
+
+        # Find open ports
+        open_ports = re.findall(port_pattern, sample_output)
+
+        # Find vulnerabilities
+        vulnerabilities = re.findall(vulnerability_pattern, sample_output)
+
+        # Iterate through each port
+        for port, service in open_ports:
+            # Find vulnerabilities for the current port
+            vulnerabilities_for_port = re.findall(rf"{port}/tcp[^V]+VULNERABLE:(.*?)State: VULNERABLE", sample_output, re.DOTALL)
+
+            # Only print information for ports with vulnerabilities
+            if vulnerabilities_for_port:
+                print(f"{RED}Vulnerabilities For Port: {port}/tcp open {service} {RESTORE}")
+                print("Vulnerabilities:")
+                for vulnerability in vulnerabilities_for_port:
+                    # Extract the relevant information from the nested structure
+                    vuln_info = re.search(r"\|(.+?)\n", vulnerability, re.DOTALL)
+                    if vuln_info:
+                        print(vuln_info.group(1).strip())
+
+                # Add a line break after printing vulnerabilities for the current port
+                print()
+
+        
 
     # Port 21 (Done)
     elif ftp:
@@ -299,8 +322,8 @@ Example:
             "Anonymous",
             "Anonymous FTP login allowed",
             "Low - High",
-            "Security Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files.",
-            "Disable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server."
+            "\nSecurity Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files.",
+            "\nDisable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server."
         )
 
     # Port 22 (Done)
@@ -337,16 +360,16 @@ Example:
             "SSH Authentication Methods Enumeration",
             "ssh-auth-methods",
             "Informational",
-            "| Security Risk: Enumerating SSH authentication methods can reveal potentially insecure methods, which could be targeted by attackers. |",
-            "| Disable Weak Methods: Disable deprecated and weak authentication methods (e.g., password-based authentication and publickey-based authentication) in favor of more secure methods such as public key-based authentication. |"
+            "\nSecurity Risk: Enumerating SSH authentication methods can reveal potentially insecure methods, which could be targeted by attackers.",
+            "\nDisable Weak Methods: Disable deprecated and weak authentication methods (e.g., password-based authentication and publickey-based authentication) in favor of more secure methods such as public key-based authentication."
         )
 
         check_and_display_vulnerability(
             "Weak SSH Enumeration Algorithms",
             "3des-cbc\|arcfour\|rc4",
             "Informational",
-            "Security Risk: The use of weak SSH enumeration algorithms such as 3des-cbc, arcfour, and rc4 poses a significant security risk. These algorithms have known vulnerabilities and weaknesses that can be exploited by attackers to compromise the confidentiality and integrity of SSH communications.",
-            "Update SSH Configuration: It is strongly recommended to update the SSH server configuration to disallow the use of weak encryption algorithms, including 3des-cbc, arcfour, and rc4."
+            "\nSecurity Risk: The use of weak SSH enumeration algorithms such as 3des-cbc, arcfour, and rc4 poses a significant security risk. These algorithms have known vulnerabilities and weaknesses that can be exploited by attackers to compromise the confidentiality and integrity of SSH communications.",
+            "\nUpdate SSH Configuration: It is strongly recommended to update the SSH server configuration to disallow the use of weak encryption algorithms, including 3des-cbc, arcfour, and rc4."
         )
 
     # Port 23 (Done)
@@ -383,8 +406,8 @@ Example:
             "Telnet Server Without Encryption Support",
             "Telnet server does not support encryption",
             "Informational",
-            "Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors.",
-            "Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication."
+            "\nSecurity Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors.",
+            "\nImplement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication."
         )
 
     # Port 25 (Hard)
@@ -459,40 +482,40 @@ Example:
             "HSTS not configured in HTTPS Server",
             "HSTS not configured in HTTPS Server",
             "Informational",
-            "Improved Security: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks.",
-            "Configure your web server to send the HSTS header in the HTTP response.\n| Strict-Transport-Security: max-age=31536000; includeSubDomains"
+            "\nImproved Security: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks.",
+            "\nConfigure your web server to send the HSTS header in the HTTP response.\n| Strict-Transport-Security: max-age=31536000; includeSubDomains"
         )
 
         check_and_display_vulnerability(
             "Potentially risky methods: TRACE",
             "TRACE/|DELETE",
             "Informational",
-            "Improved Security: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities.",
-            "Disable TRACE Method: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration."
+            "\nImproved Security: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities.",
+            "\nDisable TRACE Method: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration."
         )
 
         check_and_display_vulnerability(
             "64-bit block cipher 3DES vulnerable to SWEET32 attack",
             "64-bit block cipher 3DES vulnerable to SWEET32 attack",
             "Informational",
-            "Security Improvement: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes.",
-            "Replace 3DES: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks."
+            "\nSecurity Improvement: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes.",
+            "\nReplace 3DES: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks."
         )
 
         check_and_display_vulnerability(
             "Broken cipher RC4 is deprecated by RFC 7465",
             "Broken cipher RC4 is deprecated by RFC 7465",
             "Informational",
-            "Security Enhancement: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks.",
-            "Disable RC4: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides."
+            "\nSecurity Enhancement: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks.",
+            "\nDisable RC4: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides."
         )
 
         check_and_display_vulnerability(
             "TLSv1.0|TLSv1.1",
             "TLSv1.0\|TLSv1.1",
             "Informational",
-            "Security Risk: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system.",
-            "Upgrade to TLSv1.2 or TLSv1.3: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.\n| Disable TLSv1.0 and TLSv1.1: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake."
+            "\nSecurity Risk: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system.",
+            "\nUpgrade to TLSv1.2 or TLSv1.3: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.\n| Disable TLSv1.0 and TLSv1.1: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake."
         )
 
     hosts = f""
