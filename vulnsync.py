@@ -196,14 +196,21 @@ Example:
     print(f"{RESTORE}")
     print("")
     print(f"{LYELLOW}Created by MarmutHandsome{RESTORE}")
-    print(f"{LBLUE}Version 1.0{RESTORE}")
+    print(f"{LBLUE}Version 2.0{RESTORE}") # Version Update
     print("")
     print(f"{GREEN}Starting!!!{RESTORE}")
+    print("")
+    print(f"{GREEN}On Progress!!! (Please be patient) {RESTORE}")
+    print("")
+    print(f"{GREEN}+++=======================================================+++{RESTORE}")
+    print("")
     try:
         with open(os.devnull, 'w') as nullfile:
             subprocess.check_call(command, shell=True,
                                   stdout=nullfile, stderr=nullfile)
             print(f"{GREEN}Scan completed successfully!{RESTORE}")
+            print("")
+            print(f"{YELLOW}Result For {ip}!{RESTORE}")
     except subprocess.CalledProcessError:
         print(f"{RED}Error occurred while running the Nmap scan.{RESTORE}")
 
@@ -309,13 +316,9 @@ Example:
         print(f"{CYAN}Open Port: {RESTORE}")
         hosts = f"grep --color open output.txt"
         os.system(hosts)
-        # print("")
-        # print(f"{CYAN}Close Port: {RESTORE}")
-        # hosts = f"grep --color 'filtered\|closed' output.txt"
-        # os.system(hosts)
         print("")
-        print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep 21/tcp output.txt"  # Change This
+        print(f"{RED}Vulnerabilities For Port: {RESTORE}")
+        hosts = f"grep -m1 21/tcp output.txt"  # Change This
         os.system(hosts)
 
         # Function to check for and display vulnerabilities
@@ -327,9 +330,19 @@ Example:
                 print(f"{RED}Severity{RESTORE}: {severity}")
                 print(f"{RED}Impact {RESTORE}: {description}")
                 print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
+
+                # Ask the user whether they want to exploit the vulnerability
+                exploit_choice = input("Do you want to exploit this vulnerability? (yes/no): ").lower()
+
+                if exploit_choice == "yes":
+                    # Implement your exploit logic here
+                    print("Exploiting the vulnerability...")
+                    print("")
+                    metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT {selected_port}; run; exit'"
+                    os.system(metasploit_command)
+
                 print("")
                 print("+====================================+")
-                print("")
 
         # Check and display each vulnerability
         check_and_display_vulnerability(
@@ -339,6 +352,7 @@ Example:
             "\nSecurity Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files.",
             "\nDisable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server."
         )
+
 
     # Port 22 (Done)
     elif ssh:
@@ -353,7 +367,7 @@ Example:
         # os.system(hosts)
         print("")
         print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep 22/tcp output.txt"  # Change This
+        hosts = f"grep -m1 22/tcp output.txt"  # Change This
         os.system(hosts)
 
         # Function to check for and display vulnerabilities
