@@ -24,28 +24,22 @@ LCYAN = '\033[01;36m'
 WHITE = '\033[01;37m'
 OVERWRITE = '\e[1A\e[K'
 
-# Function to validate input file
-
-
-def validate_input_file(input_file):
-    if not os.path.isfile(input_file):
-        print(f"{RED}Error: The input file '{input_file}' does not exist.{RESTORE}")
-        sys.exit(1)
-
 # Main function
-
 
 def main():
     def parser():
         script_name = sys.argv[0]
         print(f"""
 {LCYAN}
-        █▀▀▄ █▀▄▀█ █▀▀█ █▀▀█ ▒█▀▀▀█ █▀▀ █▀▀▄ ▀▀█▀▀ ░▀░ █▀▀▄ █▀▀ █░░
-        █░░█ █░▀░█ █▄▄█ █░░█ ░▀▀▀▄▄ █▀▀ █░░█ ░░█░░ ▀█▀ █░░█ █▀▀ █░░
-        ▀░░▀ ▀░░░▀ ▀░░▀ █▀▀▀ ▒█▄▄▄█ ▀▀▀ ▀░░▀ ░░▀░░ ▀▀▀ ▀░░▀ ▀▀▀ ▀▀▀
+                _         __                     
+ /\   /\ _   _ | | _ __  / _\ _   _  _ __    ___ 
+ \ \ / /| | | || || '_ \ \ \ | | | || '_ \  / __|
+  \ V / | |_| || || | | |_\ \| |_| || | | || (__ 
+   \_/   \__,_||_||_| |_|\__/ \__, ||_| |_| \___|
+                              |___/              
 {RESTORE}
 
-Usage: {script_name} [options] input_file
+Usage: {script_name} [options] Target
 
 Options:
     {LBLUE}-h, --help{RESTORE}              Show this help message and exit
@@ -69,11 +63,11 @@ Options:
     {LBLUE}-o, --output OUTPUT{RESTORE}     Specify the custom output file name
 
 Example:
-    {script_name} --fast-scan input.txt
-    {script_name} --ssh input.txt
+    {script_name} --fast-scan target
+    {script_name} --ssh target
 """)
 
-    input_file = None
+    ip = None
     output_file = "output.txt"  # Default output file name
     fast_scan = False
     full_scan = False
@@ -139,54 +133,51 @@ Example:
         elif arg == "--ldap":
             ldap = True
         else:
-            input_file = arg
+            ip = arg
 
     # Check if an input file is provided
-    if input_file is None:
-        print(f"{RED}Error: Please provide an input file.{RESTORE}")
+    if ip is None:
+        print(f"{RED}Error: Please provide Target.{RESTORE}")
         parser()
         sys.exit(1)
 
-    # Validate the input file
-    validate_input_file(input_file)
-
     command = None
     if fast_scan:
-        command = f"sudo nmap -sV -sC -O -T4 -n -Pn -oA fastscan -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -sC -O -T4 -n -Pn -oA fastscan {ip} -oN {output_file} -vv"
     elif full_scan:
-        command = f"sudo nmap -sV -sC -O -T4 -n -Pn -p- -oA fullfastscan -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -sC -O -T4 -n -Pn -p- -oA fullfastscan {ip} -oN {output_file} -vv"
     elif full_vuln:
-        command = f"sudo nmap -sV -sC -O -p- -n -Pn -oA fullscan --script=vuln --script=vulners -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -sC -O -p- -n -Pn -oA fullscan --script=vuln --script=vulners {ip} -oN {output_file} -vv"
     elif ftp:
-        command = f"sudo nmap -sV -p21 -sC -A -Pn --script ftp-* -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -p21 -sC -A -Pn --script ftp-* {ip} -oN {output_file} -vv"
     elif ssh:
-        command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-hostkey --script-args ssh_hostkey=full --script ssh-auth-methods --script-args=\"ssh.user=root\" -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-hostkey --script-args ssh_hostkey=full --script ssh-auth-methods --script-args=\"ssh.user=root\" {ip} -oN {output_file} -vv"
     elif telnet:
-        command = f"sudo nmap -n -sV -Pn --script \"*telnet* and safe\" -p 23 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -n -sV -Pn --script \"*telnet* and safe\" -p 23 {ip} -oN {output_file} -vv"
     elif smtp:
-        command = f"sudo nmap -Pn -sV --script=smtp-commands,smtp-enum-users,smtp-vuln-cve2010-4344,smtp-vuln-cve2011-1720,smtp-vuln-cve2011-1764 -p 25,465,587 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -Pn -sV --script=smtp-commands,smtp-enum-users,smtp-vuln-cve2010-4344,smtp-vuln-cve2011-1720,smtp-vuln-cve2011-1764 -p 25,465,587 {ip} -oN {output_file} -vv"
     elif dns:
-        command = f"sudo nmap -Pn -sV -n --script '(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport' -p 53 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -Pn -sV -n --script '(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport' -p 53 {ip} -oN {output_file} -vv"
     elif smb:
-        command = f"sudo nmap -p 139,445 -vv -Pn --script smb-security-mode.nse --script smb2-security-mode --script smb-vuln* --script=smb-vuln-cve2009-3103.nse,smb-vuln-ms06-025.nse,smb-vuln-ms07-029.nse,smb-vuln-ms08-067.nse,smb-vuln-ms10-054.nse,smb-vuln-ms10-061.nse,smb-vuln-ms17-010.nse -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -p 139,445 -vv -Pn --script smb-security-mode.nse --script smb2-security-mode --script smb-vuln* --script=smb-vuln-cve2009-3103.nse,smb-vuln-ms06-025.nse,smb-vuln-ms07-029.nse,smb-vuln-ms08-067.nse,smb-vuln-ms10-054.nse,smb-vuln-ms10-061.nse,smb-vuln-ms17-010.nse {ip} -oN {output_file} -vv"
     elif smb_brute:
-        command = f"sudo nmap --script smb-vuln* -Pn -p 139,445 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap --script smb-vuln* -Pn -p 139,445 {ip} -oN {output_file} -vv"
     elif snmp:
-        command = f"sudo nmap -Pn -p 161,162,10161,10162 -sV --script \"snmp* and not snmp-brute\" -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -Pn -p 161,162,10161,10162 -sV --script \"snmp* and not snmp-brute\" {ip} -oN {output_file} -vv"
     elif mssql:
-        command = f"sudo nmap -Pn --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -Pn --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 {ip} -oN {output_file} -vv"
     elif mysql:
-        command = f"sudo nmap -Pn -sV --script=mysql-databases.nse,mysql-empty-password.nse,mysql-enum.nse,mysql-info.nse,mysql-variables.nse,mysql-vuln-cve2012-2122.nse -p 3306 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -Pn -sV --script=mysql-databases.nse,mysql-empty-password.nse,mysql-enum.nse,mysql-info.nse,mysql-variables.nse,mysql-vuln-cve2012-2122.nse -p 3306 {ip} -oN {output_file} -vv"
     elif rdp:
-        command = f"sudo nmap -sV -Pn --script \"rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info\" -p 3389 -T4 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -Pn --script \"rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info\" -p 3389 -T4 {ip} -oN {output_file} -vv"
     elif cassandra:
-        command = f"sudo nmap -sV -Pn --script cassandra-info -p 9042,9160 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -Pn --script cassandra-info -p 9042,9160 {ip} -oN {output_file} -vv"
     elif cipher_scan:
-        command = f"sudo nmap -sV -p 80,443 -Pn --script ssl-enum-ciphers -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -p 80,443 -Pn --script ssl-enum-ciphers {ip} -oN {output_file} -vv"
     elif ldap:
-        command = f"sudo nmap -sV -Pn --script \"ldap* and not brute\" --script ldap-search -p 389,636,3268,3269 -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -Pn --script \"ldap* and not brute\" --script ldap-search -p 389,636,3268,3269 {ip} -oN {output_file} -vv"
     elif web:
-        command = f"sudo nmap -T4 --reason -Pn -sV -p 443 --script='banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' -iL {input_file} -oN {output_file} -vv"
+        command = f"sudo nmap -T4 --reason -Pn -sV -p 443 --script='banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' {ip} -oN {output_file} -vv"
     else:
         print(f"{RED}Error: Please specify a valid scan option.{RESTORE}")
         parser()
@@ -196,9 +187,12 @@ Example:
     hosts = f"clear"
     os.system(hosts)
     print(f"{LCYAN}")
-    print("█▀▀▄ █▀▄▀█ █▀▀█ █▀▀█ ▒█▀▀▀█ █▀▀ █▀▀▄ ▀▀█▀▀ ░▀░ █▀▀▄ █▀▀ █░")
-    print("█░░█ █░▀░█ █▄▄█ █░░█ ░▀▀▀▄▄ █▀▀ █░░█ ░░█░░ ▀█▀ █░░█ █▀▀ █░░")
-    print("▀░░▀ ▀░░░▀ ▀░░▀ █▀▀▀ ▒█▄▄▄█ ▀▀▀ ▀░░▀ ░░▀░░ ▀▀▀ ▀░░▀ ▀▀▀ ▀▀▀")
+    print("                _         __                     ")
+    print(" /\   /\ _   _ | | _ __  / _\ _   _  _ __    ___ ")
+    print(" \ \ / /| | | || || '_ \ \ \ | | | || '_ \  / __|")
+    print("  \ V / | |_| || || | | |_\ \| |_| || | | || (__ ")
+    print("   \_/   \__,_||_||_| |_|\__/ \__, ||_| |_| \___|")
+    print("                              |___/              ")
     print(f"{RESTORE}")
     print("")
     print(f"{LYELLOW}Created by MarmutHandsome{RESTORE}")
@@ -218,7 +212,7 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep --color open output.txt"
+        hosts = f"grep --color syn-ack output.txt"
         os.system(hosts)
         print("")
         print(f"{CYAN}Close Port: {RESTORE}")
@@ -231,7 +225,7 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep --color open output.txt"
+        hosts = f"grep --color syn-ack output.txt"
         os.system(hosts)
         print("")
         print(f"{CYAN}Close Port: {RESTORE}")
@@ -251,10 +245,13 @@ Example:
         hosts = f"grep --color 'filtered\|closed' output.txt"
         os.system(hosts)
         print("")
-        # print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        # hosts = f"grep 21/tcp output.txt"  # Change This
-        # os.system(hosts)
 
+
+        def run_metasploit(selected_vulnerability, selected_port, ip):
+            metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT {selected_port}; run; exit'"
+            os.system(metasploit_command)
+
+        # Read content from the file
         with open("output.txt", "r") as file:
             sample_output = file.read()
 
@@ -268,25 +265,42 @@ Example:
         # Find vulnerabilities
         vulnerabilities = re.findall(vulnerability_pattern, sample_output)
 
-        # Iterate through each port
-        for port, service in open_ports:
-            # Find vulnerabilities for the current port
-            vulnerabilities_for_port = re.findall(rf"{port}/tcp[^V]+VULNERABLE:(.*?)State: VULNERABLE", sample_output, re.DOTALL)
+        exploit_again = True
 
-            # Only print information for ports with vulnerabilities
-            if vulnerabilities_for_port:
-                print(f"{RED}Vulnerabilities For Port: {port}/tcp open {service} {RESTORE}")
-                print("Vulnerabilities:")
-                for vulnerability in vulnerabilities_for_port:
-                    # Extract the relevant information from the nested structure
-                    vuln_info = re.search(r"\|(.+?)\n", vulnerability, re.DOTALL)
-                    if vuln_info:
-                        print(vuln_info.group(1).strip())
+        while exploit_again:
+            # Iterate through each port
+            for port, service in open_ports:
+                # Find vulnerabilities for the current port
+                vulnerabilities_for_port = re.findall(rf"{port}/tcp[^V]+VULNERABLE:(.*?)State: VULNERABLE", sample_output, re.DOTALL)
 
-                # Add a line break after printing vulnerabilities for the current port
-                print()
+                # Only print information for ports with vulnerabilities
+                if vulnerabilities_for_port:
+                    print(f"{RED}Vulnerable Port: {port}/tcp open {service} {RESTORE}")
+                    print("Vulnerabilities:")
+                    for vulnerability in vulnerabilities_for_port:
+                        # Extract the relevant information from the nested structure
+                        vuln_info = re.search(r"\|(.+?)\n", vulnerability, re.DOTALL)
+                        if vuln_info:
+                            print(vuln_info.group(1).strip())
 
-        
+                    # Add a line break after printing vulnerabilities for the current port
+                    print()
+
+            # Ask user for input
+            selected_vulnerability = input("Which Vulnerability You Need to Exploit? ")
+            selected_port = input("Which Port? ")
+            # selected_ip = input("Which IP? ")  # Remove This For Production
+            print("")
+
+            run_metasploit(selected_vulnerability, selected_port, ip)
+
+            # Ask if the user wants to exploit again
+            print("")
+            user_choice = input("Thanks For Using This Tool! Exploit Again (yes/no)? ").lower()
+            exploit_again = user_choice == "yes"
+
+        print("")
+        print("Goodbye!")
 
     # Port 21 (Done)
     elif ftp:
