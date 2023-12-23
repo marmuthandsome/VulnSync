@@ -157,7 +157,7 @@ Example:
     elif smtp:
         command = f"sudo nmap -Pn -sV --script=smtp-commands,smtp-enum-users,smtp-vuln-cve2010-4344,smtp-vuln-cve2011-1720,smtp-vuln-cve2011-1764 -p 25,465,587 {ip} -oN {output_file} -vv"
     elif dns:
-        command = f"sudo nmap -Pn -sV -n --script '(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport' -p 53 {ip} -oN {output_file} -vv"
+        command = f"sudo nmap -Pn -sV -n --script '(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport' -p- {ip} -oN {output_file} -vv"
     elif smb:
         command = f"sudo nmap -p 139,445 -vv -Pn --script smb-security-mode.nse --script smb2-security-mode --script smb-vuln* --script=smb-vuln-cve2009-3103.nse,smb-vuln-ms06-025.nse,smb-vuln-ms07-029.nse,smb-vuln-ms08-067.nse,smb-vuln-ms10-054.nse,smb-vuln-ms10-061.nse,smb-vuln-ms17-010.nse {ip} -oN {output_file} -vv"
     elif smb_brute:
@@ -329,20 +329,24 @@ Example:
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
                 print(f"{RED}Severity{RESTORE}: {severity}")
                 print(f"{RED}Impact {RESTORE}: {description}")
+                print("")
                 print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
+                print("")
+                print("+++=======================================================+++")
+                print("")
 
                 # Ask the user whether they want to exploit the vulnerability
-                exploit_choice = input("Do you want to exploit this vulnerability? (yes/no): ").lower()
+                # exploit_choice = input("Do you want to exploit this vulnerability? (yes/no): ").lower()
 
-                if exploit_choice == "yes":
-                    # Implement your exploit logic here
-                    print("Exploiting the vulnerability...")
-                    print("")
-                    metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT {selected_port}; run; exit'"
-                    os.system(metasploit_command)
+                # if exploit_choice == "yes":
+                #     # Implement your exploit logic here
+                #     print("Exploiting the vulnerability...")
+                #     print("")
+                #     metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT {selected_port}; run; exit'"
+                #     os.system(metasploit_command)
 
-                print("")
-                print("+====================================+")
+                # print("")
+                # print("+++=======================================================+++")
 
         # Check and display each vulnerability
         check_and_display_vulnerability(
@@ -353,13 +357,12 @@ Example:
             "\nDisable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server."
         )
 
-
     # Port 22 (Done)
     elif ssh:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep --color open output.txt"
+        hosts = f"grep --color syn-ack output.txt"
         os.system(hosts)
         # print("")
         # print(f"{CYAN}Close Port: {RESTORE}")
@@ -378,9 +381,10 @@ Example:
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
                 print(f"{RED}Severity{RESTORE}: {severity}")
                 print(f"{RED}Impact {RESTORE}: {description}")
+                print("")
                 print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
-                print("+====================================+")
+                print("+++=======================================================+++")
                 print("")
 
         # Check and display each vulnerability
@@ -424,9 +428,10 @@ Example:
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
                 print(f"{RED}Severity{RESTORE}: {severity}")
                 print(f"{RED}Impact {RESTORE}: {description}")
+                print("")
                 print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
-                print("+====================================+")
+                print("+++=======================================================+++")
                 print("")
 
         # Check and display each vulnerability
@@ -500,9 +505,10 @@ Example:
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
                 print(f"{RED}Severity{RESTORE}: {severity}")
                 print(f"{RED}Impact {RESTORE}: {description}")
+                print("")
                 print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
-                print("+====================================+")
+                print("+++=======================================================+++")
                 print("")
 
         # Check and display each vulnerability
