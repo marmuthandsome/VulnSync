@@ -1,0 +1,61 @@
+    if fast_scan:
+        command = f"sudo nmap -sV -sC -O -T4 -n -Pn -oA fastscan {ip} -oN {output_file} -vv"
+    elif full_scan:
+        command = f"sudo nmap -sV -sC -O -T4 -n -Pn -p- -oA fullfastscan {ip} -oN {output_file} -vv"
+    elif full_vuln:
+        command = f"sudo nmap -sV -sC -O -p- -n -Pn -oA fullscan --script=vuln --script=vulners {ip} -oN {output_file} -vv"
+    elif ftp:
+        command = f"sudo nmap -sV -p21 -sC -A -Pn --script=ftp-anon {ip} -oN {output_file} -vv"
+    elif ssh:
+        command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-hostkey --script-args ssh_hostkey=full --script ssh-auth-methods --script-args=\"ssh.user=root\" {ip} -oN {output_file} -vv"
+    elif telnet:
+        command = f"sudo nmap -n -sV -Pn --script \"*telnet* and safe\" -p 23 {ip} -oN {output_file} -vv"
+    elif smtp:
+        command = f"sudo nmap -Pn -sV --script=smtp-commands,smtp-enum-users,smtp-vuln-cve2010-4344,smtp-vuln-cve2011-1720,smtp-vuln-cve2011-1764 -p 25,465,587 {ip} -oN {output_file} -vv"
+    # elif dns:
+    #     command = f"sudo nmap -Pn -sV -n --script '(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport' -p- {ip} -oN {output_file} -vv"
+    elif smb:
+        command = f"sudo nmap -p 139,445 -vv -Pn --script smb-security-mode.nse --script smb2-security-mode --script smb-vuln* --script=smb-vuln-cve2009-3103.nse,smb-vuln-ms06-025.nse,smb-vuln-ms07-029.nse,smb-vuln-ms08-067.nse,smb-vuln-ms10-054.nse,smb-vuln-ms10-061.nse,smb-vuln-ms17-010.nse {ip} -oN {output_file} -vv"
+    elif smb_brute:
+        command = f"sudo nmap --script smb-vuln* -Pn -p 139,445 {ip} -oN {output_file} -vv"
+    # elif snmp:
+    #     command = f"sudo nmap -Pn -p 161,162,10161,10162 -sV --script \"snmp* and not snmp-brute\" {ip} -oN {output_file} -vv"
+    elif mssql:
+        command = f"sudo nmap -Pn --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 {ip} -oN {output_file} -vv"
+    elif mysql:
+        command = f"sudo nmap -Pn -sV --script=mysql-databases.nse,mysql-empty-password.nse,mysql-enum.nse,mysql-info.nse,mysql-variables.nse,mysql-vuln-cve2012-2122.nse -p 3306 {ip} -oN {output_file} -vv"
+    elif rdp:
+        command = f"sudo nmap -sV -Pn --script \"rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info\" -p 3389 -T4 {ip} -oN {output_file} -vv"
+    elif cassandra:
+        command = f"sudo nmap -sV -Pn --script cassandra-info -p 9042,9160 {ip} -oN {output_file} -vv"
+    elif cipher_scan:
+        command = f"sudo nmap -sV -p 80,443 -Pn --script ssl-enum-ciphers {ip} -oN {output_file} -vv"
+    elif ldap:
+        command = f"sudo nmap -sV -Pn --script \"ldap* and not brute\" --script ldap-search -p 389,636,3268,3269 {ip} -oN {output_file} -vv"
+    elif web:
+        command = f"sudo nmap -T4 --reason -Pn -sV -p 443 --script='banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' {ip} -oN {output_file} -vv"
+    else:
+        print(f"{RED}Error: Please specify a valid scan option.{RESTORE}")
+        parser()
+        sys.exit(1)
+Done:
+ftp
+ssh
+telnet
+smtp
+web
+smb
+redis
+vnc
+
+On Progress:
+
+
+Not Yet:
+mssql
+mysql
+rdp
+ldap
+rstmp
+
+pg5pyw

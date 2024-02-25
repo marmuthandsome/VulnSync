@@ -1,1 +1,0 @@
-# Nmap 7.94 scan initiated Wed Dec 20 16:20:54 2023 as: nmap -Pn -sV -n --script "(default and *dns*) or fcrdns or dns-srv-enum or dns-random-txid or dns-random-srcport" -p- -oN output.txt -vv 36.88.34.34
