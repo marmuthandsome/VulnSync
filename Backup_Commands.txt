@@ -47,6 +47,7 @@ web
 smb
 redis
 vnc
+mongodb
 
 On Progress:
 

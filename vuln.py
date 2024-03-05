@@ -306,6 +306,55 @@ def main():
                         print(
                             "No vulnerabilities found with minimum or low severity.")
 
+                elif "27017" in ports.split(',' or "27018" in ports.split(',')):
+
+                    command = f"sudo nmap -sV -p 27018,27017 -sC -A -Pn --script= mongodb-info {ip} -oN result.txt"
+                    try:
+                        with open(os.devnull, 'w') as nullfile:
+                            subprocess.check_call(command, shell=True,
+                                                  stdout=nullfile, stderr=nullfile)
+                    except subprocess.CalledProcessError:
+                        print("Error occurred while running the Nmap scan.")
+                        print("")
+                    vulnerabilities_found = check_and_display_vulnerabilities(
+                        "result.txt")
+
+                    # Prompt the user for exploitation after displaying all vulnerabilities
+                    print("")
+                    if vulnerabilities_found:
+                        exploit_choice = input(
+                            f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
+
+                        # Check user's choice and call the function accordingly
+                        if exploit_choice == 'yes':
+
+                            metasploit_command = f"mongo {ip}"
+                            print("")
+                            print(f"{LCYAN}MongoDB Commnads: {RESET}")
+                            print(f"{LCYAN}show dbs {RESET}")
+                            print(f"{LCYAN}use <db>{RESET}")
+                            print(f"{LCYAN}show collections{RESET}")
+                            print(f"{LCYAN}db.<collection>.find(){RESET}")
+                            print(f"{LCYAN}db.<collection>.count(){RESET}")
+                            print(f"")
+                            os.system(metasploit_command)
+
+                            print("")
+                            print("")
+                            print(
+                                f"{RED}Vulnerability {RESET}Anonymous FTP login allowed = {GREEN}VALID {RESET}")
+
+                            print("")
+                            print(f"{LCYAN}Thanks For Using This Tool! {RESET}")
+
+                        elif exploit_choice == 'no':
+                            print("Not exploiting any vulnerabilities.")
+                        else:
+                            print("Invalid choice. Please enter 'yes' or 'no'.")
+                    else:
+                        print(
+                            "No vulnerabilities found with minimum or low severity.")
+
                 # Another Step
                 retry_option = input(
                     "Do you want to scan another port (y) or exit the program (exit): ").lower()
@@ -464,6 +513,14 @@ def main():
             "High",
             "\nThe presence of VNC with the 'VNC_NONE_AUTH' authentication method indicates a serious security misconfiguration. Attackers could exploit this misconfiguration to gain unauthorized access to the system, potentially compromising sensitive data or performing malicious activities.",
             "\nDisable VNC or configure it to use secure authentication methods such as VNC password or SSH tunneling."
+        )
+
+        check_and_display_vulnerability(
+            "MongoDB Database Found Without Authentication",
+            "sizeOnDisk",
+            "Critical",
+            "\nThis finding indicates a severe security misconfiguration where the MongoDB database is accessible without requiring authentication. It exposes sensitive data stored in the database, allowing unauthorized access, modification, or deletion of data.",
+            "\nEnable authentication mechanisms such as username/password or keyfile authentication in the MongoDB configuration."
         )
 
         return vulnerabilities_found  # Return whether vulnerabilities were found
