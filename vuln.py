@@ -12,6 +12,19 @@ GREEN = '\033[92m'  # Adding Green color code
 # Main function
 
 
+def grep_string_in_file(string_to_find, file_path):
+    """Check if the specified string is found in the given file."""
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                if string_to_find in line:
+                    return True
+        return False
+    except FileNotFoundError:
+        print(f"File '{file_path}' not found.")
+        return False
+
+
 def main():
     # Your default values
     output_file = "output.txt"
@@ -165,15 +178,39 @@ def main():
                     check_and_display_vulnerabilities("result.txt")
 
                 elif "25" in ports.split(','):
-                    command = f"sudo nmap -Pn -sV --script=smtp-commands,smtp-enum-users,smtp-vuln-cve2010-4344,smtp-vuln-cve2011-1720,smtp-vuln-cve2011-1764 -p 25,465,587 {ip} -oN result.txt"
+                    print("")
+                    print(f"{LCYAN}Bruteforce Username SMTP...\n{RESET}")
+                    metasploit_command = f"msfconsole -q -x 'use auxiliary/scanner/smtp/smtp_enum; set RHOSTS {ip}; set RHOST {ip}; set RPORT 25; set USER_FILE /usr/share/seclists/Usernames/top-usernames-shortlist.txt; spool result.log; run; exit'"
+                    os.system(metasploit_command)
+
                     try:
                         with open(os.devnull, 'w') as nullfile:
                             subprocess.check_call(command, shell=True,
                                                   stdout=nullfile, stderr=nullfile)
                     except subprocess.CalledProcessError:
-                        print("Error occurred while running the Nmap scan.")
+                        print("Error occurred.")
                         print("")
-                    check_and_display_vulnerabilities("result.txt")
+                    check_and_display_vulnerabilities("result.log")
+
+                    # Check if the specified string is found in the result.log file
+                    if grep_string_in_file("Users found", "result.log"):
+                        user = input(
+                            "===>> Insert User? ")
+                        print("")
+                        print(f"{LCYAN}Bruteforce Password SSH...\n{RESET}")
+                        hydra_command = f"hydra -t 16 -l {user} -P /usr/share/wordlists/rockyou.txt {ip} ssh > result.txt"
+                        os.system(hydra_command)
+
+                        try:
+                            with open(os.devnull, 'w') as nullfile:
+                                subprocess.check_call(command, shell=True,
+                                                      stdout=nullfile, stderr=nullfile)
+                        except subprocess.CalledProcessError:
+                            print("Error occurred.")
+                            print("")
+                        check_and_display_vulnerabilities("result.txt")
+                    else:
+                        print("Users not found.")
 
                 elif "80" in ports.split(',') or "443" in ports.split(','):
                     command = f"sudo nmap -T4 --reason -Pn -sV -p 80,443 --script='banner,(http* or ssl*) and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' {ip} -oN result.txt"
@@ -357,7 +394,7 @@ def main():
 
                 # Another Step
                 retry_option = input(
-                    "Do you want to scan another port (y) or exit the program (exit): ").lower()
+                    "\n===>>Do you want to scan another port (y) or exit the program (exit): ").lower()
                 if retry_option == 'exit':
                     run_scan_loop = False
             # If User Exit
@@ -509,7 +546,7 @@ def main():
 
         check_and_display_vulnerability(
             "Insecure VNC Configuration (VNC NONE AUTH)",
-            "does\|not\|require\|authentication",
+            "does not require authentication",
             "High",
             "\nThe presence of VNC with the 'VNC_NONE_AUTH' authentication method indicates a serious security misconfiguration. Attackers could exploit this misconfiguration to gain unauthorized access to the system, potentially compromising sensitive data or performing malicious activities.",
             "\nDisable VNC or configure it to use secure authentication methods such as VNC password or SSH tunneling."
@@ -521,6 +558,22 @@ def main():
             "Critical",
             "\nThis finding indicates a severe security misconfiguration where the MongoDB database is accessible without requiring authentication. It exposes sensitive data stored in the database, allowing unauthorized access, modification, or deletion of data.",
             "\nEnable authentication mechanisms such as username/password or keyfile authentication in the MongoDB configuration."
+        )
+
+        check_and_display_vulnerability(
+            "SMTP User Enumeration",
+            "Users found",
+            "Medium",
+            "\nThe exposure of the administrator account through SMTP user enumeration poses a significant security risk. Attackers can exploit this information to launch targeted attacks, gain unauthorized access, escalate privileges, or compromise sensitive data.",
+            "\nRegularly review and update SMTP server configurations to ensure proper security controls are in place."
+        )
+
+        check_and_display_vulnerability(
+            "Unauthorized Access via SSH Credentials Discovery",
+            "valid password found",
+            "High - Critical",
+            "\nThe discovery of SSH username and password by a pentester poses a severe security risk as it allows unauthorized access to the system, potentially leading to data breaches, unauthorized modifications, or system compromise.",
+            "\nImplement strong, unique passwords for SSH accounts and avoid using default or easily guessable credentials."
         )
 
         return vulnerabilities_found  # Return whether vulnerabilities were found
