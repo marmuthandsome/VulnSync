@@ -166,6 +166,44 @@ def main():
                         print(
                             "No vulnerabilities found with minimum or low severity.")
 
+                elif "22" in ports.split(','):
+                    command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-hostkey --script-args ssh_hostkey=full --script ssh-auth-methods {ip} -oN {output_file}"
+                    try:
+                        with open(os.devnull, 'w') as nullfile:
+                            subprocess.check_call(command, shell=True,
+                                                  stdout=nullfile, stderr=nullfile)
+                    except subprocess.CalledProcessError:
+                        print("Error occurred while running the Nmap scan.")
+                        print("")
+                    check_and_display_vulnerabilities("result.txt")
+
+                    # # Ask the user if they want to proceed with brute forcing
+                    # brute_force_choice = input(
+                    #     "Do you want to proceed with brute forcing? (yes/no): ").lower()
+
+                    # # Check the user's choice and take appropriate action
+                    # if brute_force_choice == 'yes':
+                    #     # Perform brute forcing
+                    #     print(f"{LCYAN}Bruteforce Username SSH...\n{RESET}")
+                    #     metasploit_command = f"msfconsole -q -x 'use scanner/ssh/ssh_enumusers; set RHOSTS 103.127.135.77; set RHOST 103.127.135.77; set RPORT 22; set USER_FILE /usr/share/seclists/Usernames/top-usernames-shortlist.txt; spool result.log; run; exit'"
+                    #     os.system(metasploit_command)
+
+                    #     try:
+                    #         with open(os.devnull, 'w') as nullfile:
+                    #             subprocess.check_call(command, shell=True,
+                    #                                   stdout=nullfile, stderr=nullfile)
+                    #     except subprocess.CalledProcessError:
+                    #         print("Error occurred.")
+                    #         print("")
+                    #     check_and_display_vulnerabilities("result.log")
+
+                    # elif brute_force_choice == 'no':
+                    #     # Do not perform brute forcing
+                    #     print("Brute forcing skipped.")
+                    # else:
+                    #     # Invalid choice
+                    #     print("Invalid choice. Please enter 'yes' or 'no'.")
+
                 elif "23" in ports.split(','):
                     command = f"sudo nmap -n -sV -Pn --script \"*telnet* and safe\" -p 23 {ip} -oN result.txt"
                     try:
@@ -200,6 +238,10 @@ def main():
                         print(f"{LCYAN}Bruteforce Password SSH...\n{RESET}")
                         hydra_command = f"hydra -t 16 -l {user} -P /usr/share/wordlists/rockyou.txt {ip} ssh > result.txt"
                         os.system(hydra_command)
+
+                        grep_command = f"grep -m 1 '\[22\]\[ssh\]' result.txt"
+                        print("")
+                        os.system(grep_command)
 
                         try:
                             with open(os.devnull, 'w') as nullfile:
@@ -442,7 +484,7 @@ def main():
 
         check_and_display_vulnerability(
             "Insecure SSH Authentication Methods",
-            "publickey\|password",
+            "publickey",
             "Informational",
             "\nDiscovered that the SSH server supports both the 'publickey' and 'password' authentication methods, potentially exposing the system to security risks.",
             "\nThis configuration exposes the system to the risk of brute force attacks, where attackers may attempt to gain unauthorized access using weak passwords or by exploiting vulnerabilities in the public key authentication process."
@@ -570,7 +612,7 @@ def main():
 
         check_and_display_vulnerability(
             "Unauthorized Access via SSH Credentials Discovery",
-            "valid password found",
+            "\[22\]\[ssh\]",
             "High - Critical",
             "\nThe discovery of SSH username and password by a pentester poses a severe security risk as it allows unauthorized access to the system, potentially leading to data breaches, unauthorized modifications, or system compromise.",
             "\nImplement strong, unique passwords for SSH accounts and avoid using default or easily guessable credentials."
