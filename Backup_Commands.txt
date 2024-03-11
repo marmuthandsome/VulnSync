@@ -50,7 +50,7 @@ vnc
 mongodb
 
 On Progress:
-
+postgresql
 
 Not Yet:
 mssql
