@@ -167,44 +167,6 @@ def main():
                         print(
                             "No vulnerabilities found with minimum or low severity.")
 
-                elif "22" in ports.split(','):
-                    command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-hostkey --script-args ssh_hostkey=full --script ssh-auth-methods {ip} -oN {output_file}"
-                    try:
-                        with open(os.devnull, 'w') as nullfile:
-                            subprocess.check_call(command, shell=True,
-                                                  stdout=nullfile, stderr=nullfile)
-                    except subprocess.CalledProcessError:
-                        print("Error occurred while running the Nmap scan.")
-                        print("")
-                    check_and_display_vulnerabilities("result.txt")
-
-                    # # Ask the user if they want to proceed with brute forcing
-                    # brute_force_choice = input(
-                    #     "Do you want to proceed with brute forcing? (yes/no): ").lower()
-
-                    # # Check the user's choice and take appropriate action
-                    # if brute_force_choice == 'yes':
-                    #     # Perform brute forcing
-                    #     print(f"{LCYAN}Bruteforce Username SSH...\n{RESET}")
-                    #     metasploit_command = f"msfconsole -q -x 'use scanner/ssh/ssh_enumusers; set RHOSTS 103.127.135.77; set RHOST 103.127.135.77; set RPORT 22; set USER_FILE /usr/share/seclists/Usernames/top-usernames-shortlist.txt; spool result.log; run; exit'"
-                    #     os.system(metasploit_command)
-
-                    #     try:
-                    #         with open(os.devnull, 'w') as nullfile:
-                    #             subprocess.check_call(command, shell=True,
-                    #                                   stdout=nullfile, stderr=nullfile)
-                    #     except subprocess.CalledProcessError:
-                    #         print("Error occurred.")
-                    #         print("")
-                    #     check_and_display_vulnerabilities("result.log")
-
-                    # elif brute_force_choice == 'no':
-                    #     # Do not perform brute forcing
-                    #     print("Brute forcing skipped.")
-                    # else:
-                    #     # Invalid choice
-                    #     print("Invalid choice. Please enter 'yes' or 'no'.")
-
                 elif "23" in ports.split(','):
                     command = f"sudo nmap -n -sV -Pn --script \"*telnet* and safe\" -p 23 {ip} -oN result.txt"
                     try:

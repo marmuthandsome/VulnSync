@@ -43,20 +43,21 @@ ftp
 ssh
 telnet
 smtp
-web
+web -> Subdomain TakeOver, Banner Grabbing, Nuclei
 smb
 redis
 vnc
 mongodb
+postgresql
 
 On Progress:
-postgresql
 
 Not Yet:
 mssql
-mysql
+mysql -> Version, Default Creds
 rdp
 ldap
-rstmp
 
-pg5pyw
+DREAD -> Not Yet
+Flowcart -> Not Yet
+Use Case Diagram -> Not Yet
