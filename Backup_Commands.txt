@@ -49,8 +49,10 @@ redis
 vnc
 mongodb
 postgresql
+rdp
 
 On Progress:
+mysql -> Version, Default Creds
 
 Not Yet:
 mssql

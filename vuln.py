@@ -110,6 +110,9 @@ def main():
 
                 # Main
                 if "22" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning SSH Vulnerability...\n{RESET}")
                     command = f"sudo nmap -p22 -sC -Pn -sV --script ssh2-enum-algos --script ssh-auth-methods {ip} -oN result.txt"
                     try:
                         with open(os.devnull, 'w') as nullfile:
@@ -121,7 +124,9 @@ def main():
                     check_and_display_vulnerabilities("result.txt")
 
                 elif "21" in ports.split(','):
-
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning FTP Vulnerability...\n{RESET}")
                     command = f"sudo nmap -sV -p21 -sC -A -Pn --script=ftp-anon {ip} -oN result.txt"
                     try:
                         with open(os.devnull, 'w') as nullfile:
@@ -168,6 +173,9 @@ def main():
                             "No vulnerabilities found with minimum or low severity.")
 
                 elif "23" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning TELNET Vulnerability...\n{RESET}")
                     command = f"sudo nmap -n -sV -Pn --script \"*telnet* and safe\" -p 23 {ip} -oN result.txt"
                     try:
                         with open(os.devnull, 'w') as nullfile:
@@ -229,6 +237,9 @@ def main():
                     check_and_display_vulnerabilities("result.txt")
 
                 elif "139" in ports.split(',') or "445" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning SMB Vulnerability...\n{RESET}")
                     command = f"sudo nmap -p 139,445 -vv -Pn --script smb-security-mode.nse --script smb2-security-mode --script smb-vuln* --script=smb-vuln-cve2009-3103.nse,smb-vuln-ms06-025.nse,smb-vuln-ms07-029.nse,smb-vuln-ms08-067.nse,smb-vuln-ms10-054.nse,smb-vuln-ms10-061.nse,smb-vuln-ms17-010.nse {ip} -oN result.txt -vv"
                     try:
                         with open(os.devnull, 'w') as nullfile:
@@ -269,6 +280,9 @@ def main():
                             "No vulnerabilities found with minimum or low severity.")
 
                 elif "6379" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning Redis Vulnerability...\n{RESET}")
                     command = f"sudo nmap -p 6379 --script redis-info {ip} -oN result.txt -vv"
                     try:
                         with open(os.devnull, 'w') as nullfile:
@@ -309,6 +323,9 @@ def main():
                             "No vulnerabilities found with minimum or low severity.")
 
                 elif "5800" in ports.split(',') or "5801" in ports.split(',') or "5900" in ports.split(',') or "5901" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning VNC Vulnerability...\n{RESET}")
                     command = f"sudo nmap -p 5800,5801,5900,5901 -Pn --script vnc-info,realvnc-auth-bypass,vnc-title {ip} -oN result.txt -vv"
                     try:
                         with open(os.devnull, 'w') as nullfile:
@@ -349,7 +366,9 @@ def main():
                             "No vulnerabilities found with minimum or low severity.")
 
                 elif "27017" in ports.split(',') or "27018" in ports.split(','):
-
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning MongoDB Vulnerability...\n{RESET}")
                     command = f"sudo nmap -sV -p 27018,27017 -sC -A -Pn --script= mongodb-info {ip} -oN result.txt"
                     try:
                         with open(os.devnull, 'w') as nullfile:
@@ -454,6 +473,46 @@ def main():
                                 "Invalid choice. Please choose a valid option (1, 2, or 3).")
                     else:
                         print("Users not found.")
+
+                elif "3389" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning RDP Vulnerability...\n{RESET}")
+                    command = f"sudo nmap --script 'rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info' -p 3389 -T4 {ip} -oN result.txt"
+                    try:
+                        with open(os.devnull, 'w') as nullfile:
+                            subprocess.check_call(command, shell=True,
+                                                  stdout=nullfile, stderr=nullfile)
+                    except subprocess.CalledProcessError:
+                        print("Error occurred while running the Nmap scan.")
+                        print("")
+                    check_and_display_vulnerabilities("result.txt")
+
+                    print("")
+                    hosts = f"grep -q -oh 'Target_Name' result.txt"
+                    os.system(hosts)
+                    hosts = f"grep -q -oh 'NetBIOS_Domain_Name' result.txt"
+                    os.system(hosts)
+                    hosts = f"grep -q -oh 'NetBIOS_Computer_Name' result.txt"
+                    os.system(hosts)
+                    hosts = f"grep -q -oh 'DNS_Domain_Name' result.txt"
+                    os.system(hosts)
+                    hosts = f"grep -q -oh 'DNS_Computer_Name' result.txt"
+                    os.system(hosts)
+
+                elif "3306" in ports.split(','):
+                    print("")
+                    print(
+                        f"{LCYAN}Scanning MySQL Vulnerability...\n{RESET}")
+                    command = f"sudo nmap -Pn -sV --script=mysql-databases.nse,mysql-empty-password.nse,mysql-enum.nse,mysql-info.nse,mysql-variables.nse,mysql-vuln-cve2012-2122.nse -p 3306 {ip} -oN result.txt -vv"
+                    try:
+                        with open(os.devnull, 'w') as nullfile:
+                            subprocess.check_call(command, shell=True,
+                                                  stdout=nullfile, stderr=nullfile)
+                    except subprocess.CalledProcessError:
+                        print("Error occurred while running the Nmap scan.")
+                        print("")
+                    check_and_display_vulnerabilities("result.txt")
 
                 # Another Step
                 retry_option = input(
