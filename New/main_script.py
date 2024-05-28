@@ -113,6 +113,7 @@ def main():
                         print("")
                     check_and_display_vulnerabilities("result.txt")
 
+
                 elif "21" in ports.split(','):
                     print("")
                     print(
