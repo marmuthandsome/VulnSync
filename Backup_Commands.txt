@@ -50,16 +50,15 @@ vnc
 mongodb
 postgresql
 rdp
+mysql -> Version, Default Creds
 
 On Progress:
-mysql -> Version, Default Creds
+
 
 Not Yet:
 mssql
-mysql -> Version, Default Creds
-rdp
 ldap
 
-DREAD -> Not Yet
+DREAD -> Done
 Flowcart -> Not Yet
 Use Case Diagram -> Not Yet

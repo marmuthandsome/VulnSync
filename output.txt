@@ -1,0 +1,132 @@
+# Nmap 7.94 scan initiated Tue Apr 30 16:18:41 2024 as: nmap -sV -sC -T4 -vv --top-ports 100 -oN output.txt 103.127.134.192
+Warning: Hit PCRE_ERROR_MATCHLIMIT when probing for service http with the regex '^HTTP/1\.0 404 Not Found\r\n(?:[^<]+|<(?!/head>))*?<style>\nbody \{ background-color: #fcfcfc; color: #333333; margin: 0; padding:0; \}\nh1 \{ font-size: 1\.5em; font-weight: normal; background-color: #9999cc; min-height:2em; line-height:2em; border-bottom: 1px inset black; margin: 0; \}\nh1, p \{ padding-left: 10px; \}\ncode\.url \{ background-color: #eeeeee; font-family:monospace; padding:0 2px;\}\n</style>'
+Warning: Hit PCRE_ERROR_MATCHLIMIT when probing for service http with the regex '^HTTP/1\.0 404 Not Found\r\n(?:[^<]+|<(?!/head>))*?<style>\nbody \{ background-color: #ffffff; color: #000000; \}\nh1 \{ font-family: sans-serif; font-size: 150%; background-color: #9999cc; font-weight: bold; color: #000000; margin-top: 0;\}\n</style>'
+Warning: Hit PCRE_ERROR_MATCHLIMIT when probing for service http with the regex '^HTTP/1\.0 404 Not Found\r\n(?:[^<]+|<(?!/head>))*?<style>\nbody \{ background-color: #fcfcfc; color: #333333; margin: 0; padding:0; \}\nh1 \{ font-size: 1\.5em; font-weight: normal; background-color: #9999cc; min-height:2em; line-height:2em; border-bottom: 1px inset black; margin: 0; \}\nh1, p \{ padding-left: 10px; \}\ncode\.url \{ background-color: #eeeeee; font-family:monospace; padding:0 2px;\}\n</style>'
+Warning: Hit PCRE_ERROR_MATCHLIMIT when probing for service http with the regex '^HTTP/1\.0 404 Not Found\r\n(?:[^<]+|<(?!/head>))*?<style>\nbody \{ background-color: #ffffff; color: #000000; \}\nh1 \{ font-family: sans-serif; font-size: 150%; background-color: #9999cc; font-weight: bold; color: #000000; margin-top: 0;\}\n</style>'
+Nmap scan report for ip-192-134-127-103.wjv-1.biznetg.io (103.127.134.192)
+Host is up, received echo-reply ttl 55 (0.0064s latency).
+Scanned at 2024-04-30 16:18:41 WIB for 268s
+Not shown: 97 filtered tcp ports (no-response)
+PORT     STATE SERVICE  REASON          VERSION
+22/tcp   open  ssh      syn-ack ttl 55  OpenSSH 8.2p1 Ubuntu 4ubuntu0.11 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 d0:56:e2:f4:64:2b:4c:fa:41:33:71:d6:a7:68:b0:f6 (RSA)
+| ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC0zLTTdWTBdO35YEy+NoTfMLvNwrCxtWxmvWLbHlcea9mce3F608VfvSCnPj6HbJd4xu7bLjZJaiFPdRTDnR6W6osL5wxuKPUzkoYqCs2C/5yOpflzEW88jki4pAImAKmHXxEa8U0gXPr2zTBDoUkLOvAjUH1KsoXDs+dbc7ltAeHLwMBmcJe5mwt5WoSXLCjNFW3UhB+b8UE+KuYslSUPx4PFsnnIxfSJrpDsdLXSrPR8vyNBRO56OCYlT2dxkAMzGDVhVZ0zIG1UudXv7A2zOGtXqpNzxEi2lR4q/SdMCkJfV8sC3QE2ULAbvQW6zzdcvMY1DMMSTdgdtlWkczhscxrXvcU5ayTXCoiTG53Z2BVRyuCfzfhQLw7X2cs92a+yQ+8BdLqhTaJ0gvk7Mv6xXmJ8Sn08Kq5OgTS8SDC3O2Oooa9RP295lXCFKqlkcI0p1lt6m6t7FeKAXjzZNYoOmbj8I/pu/ad4FDBT7KgfccX81Pl2vRydXbpnSJLP5E0=
+|   256 78:35:86:56:c7:3d:5b:8c:2d:f5:98:8f:45:f0:11:a8 (ECDSA)
+| ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJwos1RwSAhkwyecS+KlBhJGcNtebcDtp0ydzR9BceLFOLu0Jx8P+q1qZrqP6vKOVu2CrjzbtsQqE2iyIc8PFUU=
+|   256 85:f0:2a:d9:11:3c:da:3b:bb:a7:f2:dd:e7:6b:e4:76 (ED25519)
+|_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINMkhtVM1Z7Zyn/p930hnPDRPm2ozZvLJDxJ1fnb7rqK
+80/tcp   open  http?    syn-ack ttl 252
+8000/tcp open  http-alt syn-ack ttl 54  gunicorn
+|_http-server-header: gunicorn
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.0 404 Not Found
+|     Server: gunicorn
+|     Date: Tue, 30 Apr 2024 09:18:54 GMT
+|     Connection: close
+|     Content-Type: text/html; charset=utf-8
+|     <!DOCTYPE html>
+|     <html lang="en">
+|     <head>
+|     <meta http-equiv="content-type" content="text/html; charset=utf-8">
+|     <title>Page not found at /nice ports,/Trinity.txt.bak</title>
+|     <meta name="robots" content="NONE,NOARCHIVE">
+|     <style type="text/css">
+|     html * { padding:0; margin:0; }
+|     body * { padding:10px 20px; }
+|     body * * { padding:0; }
+|     body { font:small sans-serif; background:#eee; color:#000; }
+|     body>div { border-bottom:1px solid #ddd; }
+|     font-weight:normal; margin-bottom:.4em; }
+|     span { font-size:60%; color:#666; font-weight:normal; }
+|     table { border:none; border-collapse: collapse; width:100%; }
+|     vertical-align:top; padding:2px 3px; }
+|     width:12em; text-align:right; color:#666; padding-right:.5em;
+|   GenericLines: 
+|     HTTP/1.1 400 Bad Request
+|     Connection: close
+|     Content-Type: text/html
+|     Content-Length: 193
+|     <html>
+|     <head>
+|     <title>Bad Request</title>
+|     </head>
+|     <body>
+|     <h1><p>Bad Request</p></h1>
+|     Invalid Request Line &#x27;Invalid HTTP request line: &#x27;&#x27;&#x27;
+|     </body>
+|     </html>
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Server: gunicorn
+|     Date: Tue, 30 Apr 2024 09:18:49 GMT
+|     Connection: close
+|     Content-Type: text/html; charset=utf-8
+|     <!DOCTYPE html>
+|     <html lang="en">
+|     <head>
+|     <meta charset="utf-8">
+|     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+|     <meta name="viewport" content="width=device-width, initial-scale=1">
+|     <meta name="description" content="Mobile Security Framework (MobSF) is an automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis and security assessment framework capable of performing static and dynamic analysis.">
+|     <meta name="author" content="Ajin Abraham">
+|     <link rel="icon" href="/static/img/favicon.ico">
+|     <title>Mobile Security Framework - MobSF</title>
+|     <link rel="stylesheet" href="/static/adminlte/dashboard/css/adminlte.min.css">
+|_    <link rel="stylesheet" href="/static/adminlte/pl
+|_http-title: Mobile Security Framework - MobSF
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port8000-TCP:V=7.94%I=7%D=4/30%Time=6630B779%P=arm-apple-darwin23.0.0%r
+SF:(GenericLines,11E,"HTTP/1\.1\x20400\x20Bad\x20Request\r\nConnection:\x2
+SF:0close\r\nContent-Type:\x20text/html\r\nContent-Length:\x20193\r\n\r\n<
+SF:html>\n\x20\x20<head>\n\x20\x20\x20\x20<title>Bad\x20Request</title>\n\
+SF:x20\x20</head>\n\x20\x20<body>\n\x20\x20\x20\x20<h1><p>Bad\x20Request</
+SF:p></h1>\n\x20\x20\x20\x20Invalid\x20Request\x20Line\x20&#x27;Invalid\x2
+SF:0HTTP\x20request\x20line:\x20&#x27;&#x27;&#x27;\n\x20\x20</body>\n</htm
+SF:l>\n")%r(GetRequest,31BD,"HTTP/1\.0\x20200\x20OK\r\nServer:\x20gunicorn
+SF:\r\nDate:\x20Tue,\x2030\x20Apr\x202024\x2009:18:49\x20GMT\r\nConnection
+SF::\x20close\r\nContent-Type:\x20text/html;\x20charset=utf-8\r\n\r\n\n<!D
+SF:OCTYPE\x20html>\n<html\x20lang=\"en\">\n\x20\x20\x20<head>\n\x20\x20\x2
+SF:0\x20\x20\x20<meta\x20charset=\"utf-8\">\n\x20\x20\x20\x20\x20\x20<meta
+SF:\x20http-equiv=\"X-UA-Compatible\"\x20content=\"IE=edge\">\n\x20\x20\x2
+SF:0\x20\x20\x20<meta\x20name=\"viewport\"\x20content=\"width=device-width
+SF:,\x20initial-scale=1\">\n\x20\x20\x20\x20\x20\x20<meta\x20name=\"descri
+SF:ption\"\x20content=\"Mobile\x20Security\x20Framework\x20\(MobSF\)\x20is
+SF:\x20an\x20automated,\x20all-in-one\x20mobile\x20application\x20\(Androi
+SF:d/iOS/Windows\)\x20pen-testing,\x20malware\x20analysis\x20and\x20securi
+SF:ty\x20assessment\x20framework\x20capable\x20of\x20performing\x20static\
+SF:x20and\x20dynamic\x20analysis\.\">\n\x20\x20\x20\x20\x20\x20<meta\x20na
+SF:me=\"author\"\x20content=\"Ajin\x20Abraham\">\n\x20\x20\x20\x20\x20\x20
+SF:<link\x20rel=\"icon\"\x20href=\"/static/img/favicon\.ico\">\n\x20\x20\x
+SF:20\x20\x20\x20<title>Mobile\x20Security\x20Framework\x20-\x20MobSF</tit
+SF:le>\n\x20\x20\x20\x20\x20\x20<link\x20rel=\"stylesheet\"\x20href=\"/sta
+SF:tic/adminlte/dashboard/css/adminlte\.min\.css\">\n\x20\x20\x20\x20\x20\
+SF:x20<link\x20rel=\"stylesheet\"\x20href=\"/static/adminlte/pl")%r(FourOh
+SF:FourRequest,5447,"HTTP/1\.0\x20404\x20Not\x20Found\r\nServer:\x20gunico
+SF:rn\r\nDate:\x20Tue,\x2030\x20Apr\x202024\x2009:18:54\x20GMT\r\nConnecti
+SF:on:\x20close\r\nContent-Type:\x20text/html;\x20charset=utf-8\r\n\r\n<!D
+SF:OCTYPE\x20html>\n<html\x20lang=\"en\">\n<head>\n\x20\x20<meta\x20http-e
+SF:quiv=\"content-type\"\x20content=\"text/html;\x20charset=utf-8\">\n\x20
+SF:\x20<title>Page\x20not\x20found\x20at\x20/nice\x20ports,/Trinity\.txt\.
+SF:bak</title>\n\x20\x20<meta\x20name=\"robots\"\x20content=\"NONE,NOARCHI
+SF:VE\">\n\x20\x20<style\x20type=\"text/css\">\n\x20\x20\x20\x20html\x20\*
+SF:\x20{\x20padding:0;\x20margin:0;\x20}\n\x20\x20\x20\x20body\x20\*\x20{\
+SF:x20padding:10px\x2020px;\x20}\n\x20\x20\x20\x20body\x20\*\x20\*\x20{\x2
+SF:0padding:0;\x20}\n\x20\x20\x20\x20body\x20{\x20font:small\x20sans-serif
+SF:;\x20background:#eee;\x20color:#000;\x20}\n\x20\x20\x20\x20body>div\x20
+SF:{\x20border-bottom:1px\x20solid\x20#ddd;\x20}\n\x20\x20\x20\x20h1\x20{\
+SF:x20font-weight:normal;\x20margin-bottom:\.4em;\x20}\n\x20\x20\x20\x20h1
+SF:\x20span\x20{\x20font-size:60%;\x20color:#666;\x20font-weight:normal;\x
+SF:20}\n\x20\x20\x20\x20table\x20{\x20border:none;\x20border-collapse:\x20
+SF:collapse;\x20width:100%;\x20}\n\x20\x20\x20\x20td,\x20th\x20{\x20vertic
+SF:al-align:top;\x20padding:2px\x203px;\x20}\n\x20\x20\x20\x20th\x20{\x20w
+SF:idth:12em;\x20text-align:right;\x20color:#666;\x20padding-right:\.5em;"
+SF:);
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Read data files from: /opt/homebrew/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Apr 30 16:23:09 2024 -- 1 IP address (1 host up) scanned in 268.49 seconds

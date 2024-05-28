@@ -1,15 +1,8 @@
+# main_script.py
 import os
 import subprocess
-
-# Define color and style codes
-RESET = '\033[0m'
-BOLD = '\033[1m'
-LCYAN = '\033[96m'
-RED = '\033[91m'
-LPURPLE = '\033[94m'
-GREEN = '\033[92m'  # Adding Green color code
-
-# Main function
+from styles import RESET, BOLD, LCYAN, RED, LPURPLE, GREEN
+from vulnerability_checker import check_and_display_vulnerabilities
 
 def grep_string_in_file(string_to_find, file_path):
     """Check if the specified string is found in the given file."""
@@ -23,11 +16,10 @@ def grep_string_in_file(string_to_find, file_path):
         print(f"File '{file_path}' not found.")
         return False
 
-
 def main():
-    # Your default values
     output_file = "output.txt"
     output_file_1 = "result.log"
+    output_file_2 = "result.txt"
 
     def handle_option():
         try:
@@ -48,7 +40,6 @@ def main():
                       f"{RESET}")
 
                 if not scan_type_selected:
-                    # Ask user for scan type
                     while True:
                         print(f"{BOLD}1. {LCYAN}Fast Scan{RESET} ")
                         print(f"{BOLD}2. {LCYAN}Full Scan{RESET} ")
@@ -63,7 +54,6 @@ def main():
                             print(
                                 "\nInvalid input. Please choose 1, 2, 3, 4 or 5.\n")
 
-                # Check if the output file exists
                 if os.path.exists(output_file):
                     print("")
                     print(f"{BOLD}{LCYAN}Open Port:{RESET} ")
@@ -77,7 +67,7 @@ def main():
                     ip = input("Enter the target IP/URL: ")
                     print("")
                     if scan_type == '1':
-                        command = f"sudo nmap -sV -sC -T4 -vv -oA fastscan {ip} -oN {output_file}"
+                        command = f"sudo nmap -T4 -F {ip} -oN {output_file}"
                     elif scan_type == '2':
                         command = f"sudo nmap -sV -sC -T4 -vv -oA fullscan {ip} -oN {output_file}"
                     elif scan_type == '3':
@@ -99,13 +89,14 @@ def main():
                         print("")
 
                     print(f"{BOLD}{LCYAN}Open Port:{RESET} ")
-                    os.system(f"grep --color syn-ack {output_file}")
+                    os.system(f"grep --color open {output_file}")
                     print("")
                     print(f"{BOLD}{LCYAN}Close Port:{RESET} ")
                     os.system(f"grep --color 'filtered\|closed' {output_file}")
                     print("")
 
                 ports = input("Enter the ports to scan (e.g., 22): ")
+                print("")
 
                 # Main
                 if "22" in ports.split(','):
@@ -151,6 +142,7 @@ def main():
                             print(f"{LCYAN}Notes: {RESET}")
                             print(f"{LCYAN}Insert Password: {RESET}anonymous")
                             print(f"{LCYAN}List Directory: {RESET}ls -a")
+                            print(f"{LCYAN}Get File: {RESET}mget *")
                             print(f"{LCYAN}Exit: {RESET}bye")
                             print(f"")
                             os.system(metasploit_command)
@@ -236,7 +228,8 @@ def main():
                     check_and_display_vulnerabilities("result.txt")
 
                 elif "139" in ports.split(',') or "445" in ports.split(','):
-                    print("")
+                    print(
+                        "+++=======================================================+++\n")
                     print(
                         f"{LCYAN}Scanning SMB Vulnerability...\n{RESET}")
                     command = f"sudo nmap -p 139,445 -vv -Pn --script smb-security-mode.nse --script smb2-security-mode --script smb-vuln* --script=smb-vuln-cve2009-3103.nse,smb-vuln-ms06-025.nse,smb-vuln-ms07-029.nse,smb-vuln-ms08-067.nse,smb-vuln-ms10-054.nse,smb-vuln-ms10-061.nse,smb-vuln-ms17-010.nse {ip} -oN result.txt -vv"
@@ -270,13 +263,15 @@ def main():
                             metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT 445; set LHOST {selected_lhost}; run; exit'"
                             os.system(metasploit_command)
 
+                            print("")
+
                         elif exploit_choice == 'no':
                             print("Not exploiting any vulnerabilities.")
                         else:
                             print("Invalid choice. Please enter 'yes' or 'no'.")
                     else:
                         print(
-                            "No vulnerabilities found with minimum or low severity.")
+                            "\nNo vulnerabilities found with minimum or low severity.")
 
                 elif "6379" in ports.split(','):
                     print("")
@@ -525,210 +520,24 @@ def main():
                         print("")
                     check_and_display_vulnerabilities("result.txt")
 
-                # Another Step
+                # Add other port checks similarly...
+                
+                vulnerabilities_found = check_and_display_vulnerabilities(
+                        "result.txt")
+
                 retry_option = input(
-                    "\n===>>Do you want to scan another port (y) or exit the program (exit): ").lower()
+                    "\n===>> Do you want to scan another port (y) or exit the program (exit): ").lower()
                 if retry_option == 'exit':
                     run_scan_loop = False
-            # If User Exit
             if os.path.exists(output_file):
                 os.remove(output_file)
-        # If User Keyboard Interrupt
         except KeyboardInterrupt:
             print("\nKeyboard interrupt detected. Exiting...")
             if os.path.exists(output_file):
                 os.remove(output_file)
-
-    def check_and_display_vulnerabilities(filename):
-        vulnerabilities_found = False
-
-        def check_and_display_vulnerability(vulnerability_name, grep_pattern, severity, description, recommendation):
-            nonlocal vulnerabilities_found
-            hosts = f"grep -q -oh '{grep_pattern}' {filename}"
-            if os.system(hosts) == 0:
-                vulnerabilities_found = True
-                print("")
-                print(f"{RED}Vulnerability{RESET}: {vulnerability_name}")
-                print(f"{RED}Severity{RESET}: {severity}")
-                print(f"{RED}Impact{RESET}: {description}")
-                print("")
-                print(f"{LPURPLE}Recommendation{RESET}: {recommendation}")
-                print("")
-                print("+++=======================================================+++")
-                print("")
-
-        check_and_display_vulnerability(
-            "SSH Authentication Methods Enumeration",
-            "ssh-auth-methods",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nSecurity Risk: Enumerating SSH authentication methods can reveal potentially insecure methods, which could be targeted by attackers.",
-            "\nDisable Weak Methods: Disable deprecated and weak authentication methods (e.g., password-based authentication and publickey-based authentication) in favor of more secure methods such as public key-based authentication.",
-        )
-
-        check_and_display_vulnerability(
-            "Weak SSH Enumeration Algorithms",
-            "3des-cbc\|arcfour\|rc4",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nSecurity Risk: The use of weak SSH enumeration algorithms such as 3des-cbc, arcfour, and rc4 poses a significant security risk. These algorithms have known vulnerabilities and weaknesses that can be exploited by attackers to compromise the confidentiality and integrity of SSH communications.",
-            "\nUpdate SSH Configuration: It is strongly recommended to update the SSH server configuration to disallow the use of weak encryption algorithms, including 3des-cbc, arcfour, and rc4."
-        )
-
-        check_and_display_vulnerability(
-            "Insecure SSH Authentication Methods",
-            "publickey",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nDiscovered that the SSH server supports both the 'publickey' and 'password' authentication methods, potentially exposing the system to security risks.",
-            "\nThis configuration exposes the system to the risk of brute force attacks, where attackers may attempt to gain unauthorized access using weak passwords or by exploiting vulnerabilities in the public key authentication process."
-        )
-
-        check_and_display_vulnerability(
-            "Anonymous FTP login allowed",
-            "Anonymous FTP login allowed",
-            "D=5 R=5 E=2.5 A=2.5 D=8 Medium",
-            "\nSecurity Risk: Allowing anonymous FTP login can pose a significant security risk. It means that anyone can access and potentially upload or download files from your FTP server without authentication. This could lead to unauthorized access, data breaches, or the uploading of malicious files.",
-            "\nDisable Anonymous FTP: The most effective way to mitigate this risk is to disable anonymous FTP login altogether. This can usually be done in your FTP server's configuration. By doing so, you ensure that only authorized users can access the FTP server."
-        )
-
-        check_and_display_vulnerability(
-            "Telnet Server Without Encryption Support",
-            "Telnet server does not support encryption",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nSecurity Risk: Telnet is inherently insecure as it transmits data, including login credentials, in plain text. Without encryption support, sensitive information is vulnerable to eavesdropping by malicious actors.",
-            "\nImplement Secure Alternatives: Replace Telnet with more secure alternatives such as SSH (Secure Shell), which encrypts communication and provides stronger security. |\n | Disable Telnet: If possible, disable the Telnet service on the server to eliminate the security risk associated with plaintext communication."
-        )
-
-        check_and_display_vulnerability(
-            "HSTS not configured in HTTPS Server",
-            "HSTS not configured in HTTPS Server",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nImproved Security: Enabling HSTS significantly enhances the security of your website by ensuring that all communications are encrypted using HTTPS. It mitigates risks associated with SSL-stripping attacks and prevents downgrade attacks.",
-            "\nConfigure your web server to send the HSTS header in the HTTP response.\n| Strict-Transport-Security: max-age=31536000; includeSubDomains"
-        )
-
-        check_and_display_vulnerability(
-            "Potentially risky methods: TRACE or DELETE",
-            "TRACE\|DELETE",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nImproved Security: The primary impact of fixing this issue is improved security. Disabling TRACE and implementing other security measures can help protect your web application from certain types of attacks and vulnerabilities.",
-            "\nDisable TRACE Method: The most effective way to fix this issue is to disable the TRACE method altogether on your web server. This can usually be done in the web server configuration."
-        )
-
-        check_and_display_vulnerability(
-            "64-bit block cipher 3DES vulnerable to SWEET32 attack",
-            "64-bit block cipher 3DES vulnerable to SWEET32 attack",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nSecurity Improvement: Replacing 3DES with a more secure cipher, like AES, will significantly enhance the security of your data transmissions. It will protect against SWEET32 attacks, which exploit vulnerabilities in ciphers with 64-bit block sizes.",
-            "\nReplace 3DES: Replace the 3DES (Triple Data Encryption Standard) cipher with a more secure alternative, such as AES (Advanced Encryption Standard). AES is widely considered to be secure and is not vulnerable to SWEET32 attacks."
-        )
-
-        check_and_display_vulnerability(
-            "Broken cipher RC4 is deprecated by RFC 7465",
-            "Broken cipher RC4 is deprecated by RFC 7465",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nSecurity Enhancement: Disabling RC4 is essential as it is known to have serious security weaknesses. By deprecating RC4, you prevent vulnerabilities like the BEAST attack and other cryptographic attacks.",
-            "\nDisable RC4: Immediately disable the RC4 cipher suite in your SSL/TLS configurations. This should be done both on the server and client sides."
-        )
-
-        check_and_display_vulnerability(
-            "TLSv1.0 or TLSv1.1 Enabled",
-            "TLSv1.0\|TLSv1.1",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nSecurity Risk: TLSv1.0 and TLSv1.1 have known vulnerabilities that can be exploited by attackers to intercept and manipulate encrypted data. This poses a significant security risk to your system.",
-            "\nUpgrade to TLSv1.2 or TLSv1.3: Upgrade your servers and applications to support TLSv1.2 or TLSv1.3. These versions are more secure and offer better protection against attacks.\n| Disable TLSv1.0 and TLSv1.1: Disable TLSv1.0 and TLSv1.1 on your servers and applications. Ensure that they are not used as negotiation options during the TLS handshake."
-        )
-
-        check_and_display_vulnerability(
-            "Insecure Message Signing Configuration",
-            "disabled",
-            "D=0 R=0 E=2.5 A=0 D=0 LOW",
-            "\nMessage signing is disabled, which is a dangerous default configuration. Without proper message signing, the application is vulnerable to data tampering and injection attacks, potentially leading to unauthorized access, data manipulation, or other security breaches.",
-            "\nEnable Message Signing: Configure the application to use strong message signing mechanisms, such as HMAC (Hash-based Message Authentication Code) or digital signatures, to ensure the integrity and authenticity of transmitted data."
-        )
-
-        check_and_display_vulnerability(
-            "SMB remote memory corruption vulnerability",
-            "corruption",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nSuccessful exploitation of this vulnerability could allow an attacker to remotely corrupt memory in the SMB (Server Message Block) protocol implementation, leading to potential unauthorized access, data leakage, or denial of service.",
-            "\nApply Security Updates: Regularly update and patch the affected systems to ensure that the SMB protocol implementation is up-to-date with the latest security fixes."
-        )
-
-        check_and_display_vulnerability(
-            "Print Spooler Service Impersonation Vulnerability",
-            "Impersonation",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nThis vulnerability could result in an attacker executing arbitrary code with the privileges of the Print Spooler service, which might lead to unauthorized access, data manipulation, or further exploitation of the host system.",
-            "\nApply Security Updates: Ensure the Print Spooler service and the underlying operating system are up-to-date with the latest security patches."
-        )
-
-        check_and_display_vulnerability(
-            "MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption",
-            "Remote\|Code\|Execution",
-            "D=10 R=7.5 E=5 A=10 D=8 CRITICAL",
-            "\nThis finding indicates a critical vulnerability that allows an attacker to execute arbitrary code remotely on Microsoft SMBv1 servers. Exploiting this vulnerability can lead to unauthorized access, data theft, and potential compromise of the entire system.",
-            "\nApply Security Updates: Immediately apply the relevant security patch (MS17-010) provided by Microsoft to address this vulnerability.\nDisable SMBv1: Consider disabling the outdated SMBv1 protocol if it's not required for specific applications."
-        )
-
-        check_and_display_vulnerability(
-            "Unprotected Redis Server",
-            "Role",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nThe lack of password authentication on the Redis server poses a significant security risk. Attackers could potentially gain unauthorized access to sensitive data stored in the Redis database, manipulate data, or perform denial-of-service attacks, depending on the configuration and use case of the Redis server.",
-            "\nEnable the 'requirepass' directive in the redis.conf configuration file."
-        )
-
-        check_and_display_vulnerability(
-            "Insecure VNC Configuration (VNC NONE AUTH)",
-            "does not require authentication",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nThe presence of VNC with the 'VNC_NONE_AUTH' authentication method indicates a serious security misconfiguration. Attackers could exploit this misconfiguration to gain unauthorized access to the system, potentially compromising sensitive data or performing malicious activities.",
-            "\nDisable VNC or configure it to use secure authentication methods such as VNC password or SSH tunneling."
-        )
-
-        check_and_display_vulnerability(
-            "MongoDB Database Found Without Authentication",
-            "sizeOnDisk",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nThis finding indicates a severe security misconfiguration where the MongoDB database is accessible without requiring authentication. It exposes sensitive data stored in the database, allowing unauthorized access, modification, or deletion of data.",
-            "\nEnable authentication mechanisms such as username/password or keyfile authentication in the MongoDB configuration."
-        )
-
-        check_and_display_vulnerability(
-            "SMTP User Enumeration",
-            "Users found",
-            "D=8 R=5 E=5 A=6 D=8 MEDIUM",
-            "\nThe exposure of the administrator account through SMTP user enumeration poses a significant security risk. Attackers can exploit this information to launch targeted attacks, gain unauthorized access, escalate privileges, or compromise sensitive data.",
-            "\nRegularly review and update SMTP server configurations to ensure proper security controls are in place."
-        )
-
-        check_and_display_vulnerability(
-            "Unauthorized Access via SSH Credentials Discovery",
-            "\[22\]\[ssh\]",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nThe discovery of SSH username and password by a pentester poses a severe security risk as it allows unauthorized access to the system, potentially leading to data breaches, unauthorized modifications, or system compromise.",
-            "\nImplement strong, unique passwords for SSH accounts and avoid using default or easily guessable credentials."
-        )
-
-        check_and_display_vulnerability(
-            "Weak Username and Password for PostgreSQL Database",
-            "Login Successful",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nSignificant as it poses a serious security risk to the confidentiality, integrity, and availability of the PostgreSQL database. An attacker could easily gain unauthorized access to sensitive data stored in the database, potentially leading to data breaches, unauthorized modifications, or data loss.",
-            "\nImplement Strong Password Policies: Enforce the use of complex, long, and unique passwords for all database accounts, including the default postgres account."
-        )
-        check_and_display_vulnerability(
-            "Unauthorized Access to Hashed MySQL Dumps",
-            "root:",
-            "D=10 R=7.5 E=5 A=8 D=8 HIGH",
-            "\nThe unauthorized access to hashed MySQL dumps can lead to the exposure of sensitive user information, including passwords, which can be used by attackers to gain unauthorized access to accounts, escalate privileges, or perform other malicious activities.",
-            "\nEnsure that MySQL database access controls are properly configured to restrict access to authorized users only."
-        )
-
-        return vulnerabilities_found  # Return whether vulnerabilities were found
+                os.remove(output_file_2)
 
     handle_option()
 
-
-# Run the main function if this script is executed
 if __name__ == "__main__":
     main()
