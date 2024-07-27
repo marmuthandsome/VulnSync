@@ -75,7 +75,7 @@ def main():
                     elif scan_type == '4':
                         command = f"sudo nmap -sT -vv -T4 {ip} -oN {output_file}"
                     else:
-                        command = f"sudo nmap -sU -vv -T4 {ip} -oN {output_file}"
+                        command = f"sudo nmap -Pn -sU -sV -sC --top-ports=20 {ip} -oN {output_file}"
                     print(f"{GREEN}Starting!!!\n{RESET}")
                     print(f"{LCYAN}On Progress!!! (Please be patient)\n{RESET}")
                     print(
