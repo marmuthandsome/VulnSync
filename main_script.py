@@ -44,10 +44,9 @@ def main():
                         print(f"{BOLD}1. {LCYAN}Fast Scan{RESET} ")
                         print(f"{BOLD}2. {LCYAN}Full Scan{RESET} ")
                         print(f"{BOLD}3. {LCYAN}Top Port Scan{RESET} ")
-                        print(f"{BOLD}4. {LCYAN}TCP Scan{RESET} ")
-                        print(f"{BOLD}5. {LCYAN}UDP Scan{RESET} ")
+                        print(f"{BOLD}4. {LCYAN}UDP Scan{RESET} ")
                         scan_type = input("\nChoose scan type : ").lower()
-                        if scan_type in ['1', '2', '3', '4', '5']:
+                        if scan_type in ['1', '2', '3', '4']:
                             scan_type_selected = True
                             break
                         else:
@@ -72,10 +71,8 @@ def main():
                         command = f"sudo nmap -sV -sC -T4 -vv -oA fullscan {ip} -oN {output_file}"
                     elif scan_type == '3':
                         command = f"sudo nmap -sV -sC -T4 -vv --top-ports 100 {ip} -oN {output_file}"
-                    elif scan_type == '4':
-                        command = f"sudo nmap -sT -vv -T4 {ip} -oN {output_file}"
                     else:
-                        command = f"sudo nmap -Pn -sU -sV -sC --top-ports=20 {ip} -oN {output_file}"
+                        command = f"sudo nmap -Pn -sU -sV -sC --top-ports=20 -oN {output_file} {ip}"
                     print(f"{GREEN}Starting!!!\n{RESET}")
                     print(f"{LCYAN}On Progress!!! (Please be patient)\n{RESET}")
                     print(
