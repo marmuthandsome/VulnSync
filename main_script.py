@@ -3,6 +3,7 @@ import os
 import subprocess
 from styles import RESET, BOLD, LCYAN, RED, LPURPLE, GREEN
 from vulnerability_checker import check_and_display_vulnerabilities
+from datetime import datetime
 
 def grep_string_in_file(string_to_find, file_path):
     """Check if the specified string is found in the given file."""
@@ -44,15 +45,13 @@ def main():
                         print(f"{BOLD}1. {LCYAN}Fast Scan{RESET} ")
                         print(f"{BOLD}2. {LCYAN}Full Scan{RESET} ")
                         print(f"{BOLD}3. {LCYAN}Top Port Scan{RESET} ")
-                        print(f"{BOLD}4. {LCYAN}TCP Scan{RESET} ")
-                        print(f"{BOLD}5. {LCYAN}UDP Scan{RESET} ")
+                        print(f"{BOLD}4. {LCYAN}UDP Scan{RESET} ")
                         scan_type = input("\nChoose scan type : ").lower()
-                        if scan_type in ['1', '2', '3', '4', '5']:
+                        if scan_type in ['1', '2', '3', '4']:
                             scan_type_selected = True
                             break
                         else:
-                            print(
-                                "\nInvalid input. Please choose 1, 2, 3, 4 or 5.\n")
+                            print("\nInvalid input. Please choose 1, 2, 3, or 4.\n")
 
                 if os.path.exists(output_file):
                     print("")
@@ -72,28 +71,39 @@ def main():
                         command = f"sudo nmap -sV -sC -T4 -vv -oA fullscan {ip} -oN {output_file}"
                     elif scan_type == '3':
                         command = f"sudo nmap -sV -sC -T4 -vv --top-ports 100 {ip} -oN {output_file}"
-                    elif scan_type == '4':
-                        command = f"sudo nmap -sT -vv -T4 {ip} -oN {output_file}"
                     else:
-                        command = f"sudo nmap -Pn -sU -sV -sC --top-ports=20 {ip} -oN {output_file}"
+                        command = f"sudo nmap -Pn -sU -sV -sC --top-ports=20 -oN {output_file} {ip}"
+
                     print(f"{GREEN}Starting!!!\n{RESET}")
                     print(f"{LCYAN}On Progress!!! (Please be patient)\n{RESET}")
-                    print(
-                        "+++=======================================================+++\n")
+                    print("+++=======================================================+++\n")
+                    
+                    # Get the current time before running the scan
+                    start_time = datetime.now()
+
                     try:
                         with open(os.devnull, 'w') as nullfile:
-                            subprocess.check_call(command, shell=True,
-                                                  stdout=nullfile, stderr=nullfile)
+                            subprocess.check_call(command, shell=True, stdout=nullfile, stderr=nullfile)
                     except subprocess.CalledProcessError:
                         print("Error occurred while running the Nmap scan.")
                         print("")
+                    
+                    # Get the time after the scan finishes
+                    end_time = datetime.now()
+                    
+                    # Calculate the duration of the scan
+                    duration = end_time - start_time
 
                     print(f"{BOLD}{LCYAN}Open Port:{RESET} ")
                     os.system(f"grep --color open {output_file}")
                     print("")
                     print(f"{BOLD}{LCYAN}Close Port:{RESET} ")
-                    os.system(f"grep --color 'filtered\|closed' {output_file}")
+                    os.system(f"grep --color 'filtered\\|closed' {output_file}")
                     print("")
+
+                    # Display the time the scan was completed
+                    print(f"Scan completed at: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
+                    print(f"Scan duration: {duration}\n")
 
                 ports = input("Enter the ports to scan (e.g., 22): ")
                 print("")
@@ -118,6 +128,9 @@ def main():
                     print(
                         f"{LCYAN}Scanning FTP Vulnerability...\n{RESET}")
                     command = f"sudo nmap -sV -p21 -sC -A -Pn --script=ftp-anon {ip} -oN result.txt"
+
+                    start_time_1 = datetime.now()
+
                     try:
                         with open(os.devnull, 'w') as nullfile:
                             subprocess.check_call(command, shell=True,
@@ -127,10 +140,21 @@ def main():
                         print("")
                     vulnerabilities_found = check_and_display_vulnerabilities(
                         "result.txt")
+                    
+                    end_time_1 = datetime.now()
+
+                    duration_1 = end_time_1 - start_time_1
+
+                    total_time = duration + duration_1
+
+                    print(f"Scan completed at: {end_time_1.strftime('%Y-%m-%d %H:%M:%S')}")
+                    print(f"Scan duration: {duration_1}\n")
+                    print(f"Total duration: {total_time}\n")
 
                     # Prompt the user for exploitation after displaying all vulnerabilities
                     print("")
                     if vulnerabilities_found:
+
                         exploit_choice = input(
                             f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
 
