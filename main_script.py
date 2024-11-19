@@ -198,7 +198,28 @@ def main():
                     except subprocess.CalledProcessError:
                         print("Error occurred while running the Nmap scan.")
                         print("")
-                    check_and_display_vulnerabilities("result.txt")
+                    vulnerabilities_found = check_and_display_vulnerabilities(
+                        "result.txt")
+
+                    if vulnerabilities_found:
+
+                        exploit_choice = input(
+                            f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
+
+                        # Check user's choice and call the function accordingly
+                        if exploit_choice == 'yes':
+
+                            metasploit_command = f"nc -vn {ip} 23"
+                            print(f"")
+                            os.system(metasploit_command)
+
+                        elif exploit_choice == 'no':
+                            print("Not exploiting any vulnerabilities.")
+                        else:
+                            print("Invalid choice. Please enter 'yes' or 'no'.")
+                    else:
+                        print(
+                            "No vulnerabilities found with minimum or low severity.")
 
                 elif "25" in ports.split(','):
                     print("")
