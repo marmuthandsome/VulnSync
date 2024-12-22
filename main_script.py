@@ -18,6 +18,11 @@ def grep_string_in_file(string_to_find, file_path):
         return False
 
 def main():
+
+    if os.geteuid() != 0:
+        print(f"{RED}This script must be run as root. Please use 'sudo'.{RESET}")
+        exit(1)
+        
     output_file = "output.txt"
     output_file_1 = "result.log"
     output_file_2 = "result.txt"
@@ -32,13 +37,15 @@ def main():
                 os.system(hosts)
 
                 print(f"{LCYAN}{BOLD}"
-                      f"                _         __                     \n"
-                      f" /\   /\ _   _ | | _ __  / _\ _   _  _ __    ___ \n"
-                      f" \ \ / /| | | || || '_ \ \ \ | | | || '_ \ /  __|\n"
-                      f"  \ V / | |_| || || | | |_\ \| |_| || | | || (__ \n"
-                      f"   \_/   \__,_||_||_| |_|\__/ \__, ||_| |_| \___|\n"
-                      f"                              |___/              \n"
-                      f"{RESET}")
+      """
+                _         __                     
+ /\   /\ _   _ | | _ __  / _\ _   _  _ __    ___ 
+ \ \ / /| | | || || '_ \ \ \ | | | || '_ \ /  __|
+  \ V / | |_| || || | | |_\ \| |_| || | | || (__ 
+   \_/   \__,_||_||_| |_|\__/ \__, ||_| |_| \___|
+                              |___/              
+      """
+      f"{RESET}")
 
                 if not scan_type_selected:
                     while True:
@@ -59,7 +66,7 @@ def main():
                     os.system(f"grep --color open {output_file}")
                     print("")
                     print(f"{BOLD}{LCYAN}Close Port:{RESET} ")
-                    os.system(f"grep --color 'filtered\|closed' {output_file}")
+                    os.system(f"grep --color 'filtered\\|closed' {output_file}")
                     print("")
                 else:
                     print("")
@@ -272,7 +279,7 @@ def main():
                         hydra_command = f"hydra -t 16 -l {user} -P /usr/share/wordlists/rockyou.txt {ip} ssh > result.txt"
                         os.system(hydra_command)
 
-                        grep_command = f"grep -m 1 '\[22\]\[ssh\]' result.txt"
+                        grep_command = r"grep -m 1 '\[22\]\[ssh\]' result.txt"
                         print("")
                         os.system(grep_command)
 
