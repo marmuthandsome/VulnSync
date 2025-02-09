@@ -42,7 +42,7 @@ VulnSync is an advanced security tool that combines port scanning, vulnerability
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/VulnSync.git
+git clone https://github.com/marmuthandsome/VulnSync.git
 cd VulnSync
 sudo python3 main_script.py
 ```
