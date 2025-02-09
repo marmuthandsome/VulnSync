@@ -83,7 +83,6 @@ def main():
                     print(f"{LCYAN}On Progress!!! (Please be patient)\n{RESET}")
                     print("+++=======================================================+++\n")
                     
-                    # Get the current time before running the scan
                     start_time = datetime.now()
 
                     try:
@@ -93,10 +92,8 @@ def main():
                         print("Error occurred while running the Nmap scan.")
                         print("")
                     
-                    # Get the time after the scan finishes
                     end_time = datetime.now()
                     
-                    # Calculate the duration of the scan
                     duration = end_time - start_time
 
                     print(f"{BOLD}{LCYAN}Open Port:{RESET} ")
@@ -106,7 +103,6 @@ def main():
                     os.system(f"grep --color 'filtered\\|closed' {output_file}")
                     print("")
 
-                    # Display the time the scan was completed
                     print(f"Scan completed at: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
                     print(f"Scan duration: {duration}\n")
 
