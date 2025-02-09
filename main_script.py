@@ -5,7 +5,6 @@ from vulnerability_checker import check_and_display_vulnerabilities
 from datetime import datetime
 
 def grep_string_in_file(string_to_find, file_path):
-    """Check if the specified string is found in the given file."""
     try:
         with open(file_path, 'r') as file:
             for line in file:
@@ -17,7 +16,6 @@ def grep_string_in_file(string_to_find, file_path):
         return False
 
 def main():
-
     if os.geteuid() != 0:
         print(f"{RED}This script must be run as root. Please use 'sudo'.{RESET}")
         exit(1)
