@@ -1,4 +1,3 @@
-# main_script.py
 import os
 import subprocess
 from styles import RESET, BOLD, LCYAN, RED, LPURPLE, GREEN
@@ -114,7 +113,6 @@ def main():
                 ports = input("Enter the ports to scan (e.g., 22): ")
                 print("")
 
-                # Main
                 if "22" in ports.split(','):
                     print("")
                     print(
@@ -169,14 +167,12 @@ def main():
                     print(f"Scan duration: {duration_1}\n")
                     print(f"Total duration: {total_time}\n")
 
-                    # Prompt the user for exploitation after displaying all vulnerabilities
                     print("")
                     if vulnerabilities_found:
 
                         exploit_choice = input(
                             f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
 
-                        # Check user's choice and call the function accordingly
                         if exploit_choice == 'yes':
 
                             metasploit_command = f"ftp anonymous@{ip}"
@@ -233,7 +229,6 @@ def main():
                         exploit_choice = input(
                             f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
 
-                        # Check user's choice and call the function accordingly
                         if exploit_choice == 'yes':
                             metasploit_command = f"nc -vn {ip} 23"
                             print(f"")
@@ -271,7 +266,7 @@ def main():
                     print(f"Scan completed at: {end_time_1.strftime('%Y-%m-%d %H:%M:%S')}")
                     print(f"Scan duration: {duration_1}\n")
                     print(f"Total duration: {total_time}\n")
-                    # Check if the specified string is found in the result.log file
+
                     if grep_string_in_file("Users found", "result.log"):
                         user = input("===>> Insert User? ")
                         print("")
@@ -342,12 +337,10 @@ def main():
                     print(f"Scan completed at: {end_time_1.strftime('%Y-%m-%d %H:%M:%S')}")
                     print(f"Scan duration: {duration_1}\n")
                     print(f"Total duration: {total_time}\n")
-                    # Prompt the user for exploitation after displaying all vulnerabilities
                     if vulnerabilities_found:
                         exploit_choice = input(
                             f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
 
-                        # Check user's choice and call the function accordingly
                         if exploit_choice == 'yes':
 
                             print("")
@@ -396,12 +389,10 @@ def main():
                     print(f"Scan completed at: {end_time_1.strftime('%Y-%m-%d %H:%M:%S')}")
                     print(f"Scan duration: {duration_1}\n")
                     print(f"Total duration: {total_time}\n")
-                    # Prompt the user for exploitation after displaying all vulnerabilities
                     if vulnerabilities_found:
                         exploit_choice = input(
                             f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
 
-                        # Check user's choice and call the function accordingly
                         if exploit_choice == 'yes':
                             print("")
                             ip = input("IP/URL Target? ")
@@ -442,12 +433,10 @@ def main():
                     print(f"Scan completed at: {end_time_1.strftime('%Y-%m-%d %H:%M:%S')}")
                     print(f"Scan duration: {duration_1}\n")
                     print(f"Total duration: {total_time}\n")
-                    # Prompt the user for exploitation after displaying all vulnerabilities
                     if vulnerabilities_found:
                         exploit_choice = input(
                             f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
 
-                        # Check user's choice and call the function accordingly
                         if exploit_choice == 'yes':
 
                             print("")
@@ -492,13 +481,11 @@ def main():
                     print(f"Scan completed at: {end_time_1.strftime('%Y-%m-%d %H:%M:%S')}")
                     print(f"Scan duration: {duration_1}\n")
                     print(f"Total duration: {total_time}\n")
-                    # Prompt the user for exploitation after displaying all vulnerabilities
                     print("")
                     if vulnerabilities_found:
                         exploit_choice = input(
                             f"{LCYAN}Do you want to exploit any of the vulnerabilities? {RESET}(yes/no): ").lower()
 
-                        # Check user's choice and call the function accordingly
                         if exploit_choice == 'yes':
                             metasploit_command = f"mongo {ip}"
                             print("")
@@ -642,7 +629,7 @@ def main():
                             ip = input("IP/URL Target? ")
                             print("")
 
-                            metasploit_command = f"msfconsole -q -x 'use scanner/mysql/mysql_hashdump; set RHOSTS {ip}; set RHOST {ip}; set username root; run; exit'"
+                            metasploit_command = f"msfconsole -q -x 'use scanner/mysql/mysql_hashdump; set RHOSTS {ip}; set USERNAME root; set PASSWORD \"\"; run; exit'"
                             os.system(metasploit_command)
 
                             print("")
@@ -653,17 +640,13 @@ def main():
                     else:
                         print("\nNo vulnerabilities found with minimum or low severity.")
 
-                # Add other port checks similarly...
-                
-                # vulnerabilities_found = check_and_display_vulnerabilities(
-                #         "result.txt")
-
                 retry_option = input(
                     "\n===>> Do you want to scan another port (y) or exit the program (exit): ").lower()
                 if retry_option == 'exit':
                     run_scan_loop = False
             if os.path.exists(output_file):
                 os.remove(output_file)
+                os.remove(output_file_2)
         except KeyboardInterrupt:
             print("\nKeyboard interrupt detected. Exiting...")
             if os.path.exists(output_file):

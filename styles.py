@@ -1,5 +1,3 @@
-# styles.py
-
 RESET = '\033[0m'
 BOLD = '\033[1m'
 LCYAN = '\033[96m'
