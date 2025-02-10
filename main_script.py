@@ -121,6 +121,7 @@ def main():
                     except subprocess.CalledProcessError:
                         print("Error occurred while running the Nmap scan.")
                         print("")
+
                     check_and_display_vulnerabilities("result.txt")
 
                     end_time_1 = datetime.now()
@@ -321,6 +322,7 @@ def main():
                     except subprocess.CalledProcessError:
                         print("Error occurred while running the Nmap scan.")
                         print("")
+
                     vulnerabilities_found = check_and_display_vulnerabilities(
                         "result.txt")
 
@@ -640,11 +642,13 @@ def main():
                     run_scan_loop = False
             if os.path.exists(output_file):
                 os.remove(output_file)
+                os.remove(output_file_1)
                 os.remove(output_file_2)
         except KeyboardInterrupt:
             print("\nKeyboard interrupt detected. Exiting...")
             if os.path.exists(output_file):
                 os.remove(output_file)
+                os.remove(output_file_1)
                 os.remove(output_file_2)
 
     handle_option()
